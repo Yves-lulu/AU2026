@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>女皇的 AU 2026 個人課表</title>
+<style>
+  :root{
+    --paper:#F2F3EF; --ink:#15181C; --muted:#666D76; --line:#D8DAD4;
+    --cobalt:#1F3FBF; --cobalt-soft:#E4E9FB; --amber:#B97A0A; --amber-soft:#FBEFD8;
+    --alert:#B33A1E; --alert-soft:#F9E4DC; --ok:#2E6B3F; --ok-soft:#E1EFE4;
+    --card:#FFFFFF; --radius:10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,sans-serif;
+    background:var(--paper);color:var(--ink);font-size:15px;line-height:1.55;padding-bottom:92px;}
+  header{background:var(--ink);color:#F5F5F2;padding:18px 16px 14px;}
+  header h1{font-size:20px;font-weight:700;letter-spacing:.02em}
+  header .sub{font-size:12.5px;color:#B9BDC4;margin-top:2px}
+  header .sub b{color:#F0C468;font-weight:600}
+  nav.days{display:flex;gap:6px;overflow-x:auto;background:var(--ink);padding:0 12px 12px;position:sticky;top:0;z-index:20;}
+  nav.days button{flex:0 0 auto;border:1px solid #3A3F47;background:transparent;color:#C8CCD2;
+    padding:7px 13px;border-radius:999px;font-size:13.5px;cursor:pointer;font-family:inherit;}
+  nav.days button.on{background:#F5F5F2;color:var(--ink);border-color:#F5F5F2;font-weight:700}
+  nav.days button .n{font-size:11px;opacity:.75;margin-left:3px}
+  .toolbar{padding:12px 14px 4px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;max-width:760px;margin:0 auto}
+  .toolbar input[type=search]{flex:1 1 160px;min-width:140px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:14px;background:var(--card);font-family:inherit;}
+  .chip{border:1px solid var(--line);background:var(--card);color:var(--muted);
+    padding:6px 11px;border-radius:999px;font-size:12.5px;cursor:pointer;font-family:inherit;}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  main{padding:8px 14px 20px;max-width:760px;margin:0 auto}
+  .daytitle{margin:16px 2px 8px;font-size:13px;color:var(--muted);display:flex;align-items:baseline;gap:8px;}
+  .daytitle b{font-size:15px;color:var(--ink)}
+  .slot{display:grid;grid-template-columns:56px 1fr;gap:0 10px;margin-bottom:10px}
+  .slot .time{font-variant-numeric:tabular-nums;text-align:right;padding-top:12px;font-size:13px;color:var(--ink);font-weight:600;line-height:1.35;}
+  .slot .time .end{display:block;color:var(--muted);font-weight:400;font-size:12px}
+  .slot .time.tbd{color:var(--amber);font-size:12px;font-weight:700}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:11px 13px;cursor:pointer;border-left:4px solid var(--line);}
+  .card.p-star{border-left-color:var(--amber)}
+  .card.p-alt{border-left-color:var(--cobalt)}
+  .card.done{opacity:.72}
+  .card .row1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .card .code{font-size:12.5px;font-weight:700;color:var(--cobalt);letter-spacing:.03em}
+  .card h3{font-size:15px;font-weight:600;margin-top:2px}
+  .card .meta{margin-top:5px;font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 10px}
+  .badge{display:inline-block;font-size:11.5px;padding:1.5px 8px;border-radius:999px;font-weight:600}
+  .b-star{background:var(--amber-soft);color:var(--amber)}
+  .b-alt{background:var(--cobalt-soft);color:var(--cobalt)}
+  .b-lab{background:#EFE4F6;color:#6B3A93}
+  .b-reg{background:var(--ok-soft);color:var(--ok)}
+  .b-wait{background:var(--alert-soft);color:var(--alert)}
+  .b-done{background:#E4E5E2;color:#555}
+  .b-replay{background:#E2EFF2;color:#20606B}
+  .b-dig{background:#EDEEF0;color:#555}
+  .conflict{background:var(--alert-soft);border:1px solid #E2B4A4;color:var(--alert);
+    font-size:12.5px;border-radius:8px;padding:6px 10px;margin:2px 0 8px 66px;font-weight:600;}
+  .note-preview{margin-top:6px;font-size:12.5px;color:#4C5158;background:#F6F6F2;border-radius:6px;padding:5px 9px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .empty{color:var(--muted);text-align:center;padding:36px 10px;font-size:14px}
+  .bottombar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(242,243,239,.96);
+    border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+    display:flex;gap:8px;justify-content:center;}
+  .btn{font-family:inherit;font-size:14px;padding:9px 16px;border-radius:8px;cursor:pointer;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);}
+  .btn.primary{background:var(--cobalt);border-color:var(--cobalt);color:#fff;font-weight:700}
+  .btn.small{font-size:12.5px;padding:6px 11px}
+  .btn.danger{color:var(--alert);border-color:#E2B4A4}
+  dialog{border:none;border-radius:14px;max-width:600px;width:calc(100% - 28px);padding:0;margin:auto;max-height:88vh;}
+  dialog::backdrop{background:rgba(20,22,26,.5)}
+  .dlg-head{padding:15px 18px 0;display:flex;justify-content:space-between;align-items:center}
+  .dlg-head h2{font-size:17px}
+  .dlg-body{padding:12px 18px 18px;display:grid;gap:10px}
+  label.f{display:grid;gap:4px;font-size:12.5px;color:var(--muted);font-weight:600}
+  label.f input,label.f select,label.f textarea{font-family:inherit;font-size:14.5px;padding:8px 10px;
+    border:1px solid var(--line);border-radius:8px;background:#FCFCFA;color:var(--ink);}
+  label.f textarea{min-height:70px;resize:vertical}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .dlg-actions{display:flex;gap:8px;justify-content:space-between;padding-top:4px}
+  .dlg-actions .right{display:flex;gap:8px}
+  .cat-item{border:1px solid var(--line);border-radius:8px;padding:9px 11px;display:flex;gap:10px;align-items:flex-start;background:#FCFCFA}
+  .cat-item .info{flex:1;min-width:0}
+  .cat-item .c{font-size:12px;font-weight:700;color:var(--cobalt)}
+  .cat-item .t{font-size:13.5px;font-weight:600}
+  .title-en{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.35}
+  .cat-item .m{font-size:12px;color:var(--muted);margin-top:2px}
+  #catList{display:grid;gap:8px;max-height:38vh;overflow-y:auto}
+  .hint{font-size:12px;color:var(--muted)}
+  .datablock{padding:14px;border-top:1px dashed var(--line);margin-top:20px;max-width:760px;margin-left:auto;margin-right:auto}
+  .datablock h4{font-size:13.5px;margin-bottom:6px}
+  .datablock p{font-size:12.5px;color:var(--muted);margin-bottom:8px}
+  .datablock .btns{display:flex;flex-wrap:wrap;gap:8px}
+  @media print{header,nav.days,.toolbar,.bottombar,.datablock{display:none}
+    body{background:#fff;padding:0}.card{break-inside:avoid;cursor:default}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>女皇的 AU 2026 個人課表</h1>
+  <div class="sub">9月15–17日 · The Venetian, Las Vegas · <b>★必上</b> / ○備選 · 資料存本機,會後永久保留 · <span id="catStat">課程庫載入中…</span></div>
+</header>
+
+<nav class="days" id="dayTabs"></nav>
+
+<div class="toolbar">
+  <input type="search" id="q" placeholder="搜尋我的課表:代碼、名稱、講者、地點…">
+  <button class="chip" data-filter="star">★必上</button>
+  <button class="chip" data-filter="lab">Lab</button>
+  <button class="chip" data-filter="reg">已報名</button>
+  <button class="chip" data-filter="note">有筆記</button>
+</div>
+
+<main id="list"></main>
+
+<div class="datablock">
+  <h4>資料保存與備份</h4>
+  <p>課表與筆記自動存在此瀏覽器。放上 GitHub Pages 後,任何裝置開啟網址即可用;換裝置請先匯出 JSON 再匯入。</p>
+  <div class="btns">
+    <button class="btn small" onclick="exportJSON()">匯出我的課表 JSON</button>
+    <button class="btn small" onclick="document.getElementById('scheduleCsv').click()">匯入 AU My Schedule CSV</button>
+    <button class="btn small" onclick="document.getElementById('importFile').click()">匯入課表 JSON</button>
+    <button class="btn small" onclick="exportCSV()">匯出 CSV(Excel)</button>
+    <button class="btn small" onclick="window.print()">列印 / 存 PDF</button>
+    <input type="file" id="scheduleCsv" accept=".csv,text/csv" style="display:none" onchange="importScheduleCSV(event)">
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
+  </div>
+</div>
+
+<div class="bottombar">
+  <button class="btn" onclick="openCatalog()">📚 課程庫</button>
+  <button class="btn primary" onclick="openEditor()">＋ 新增</button>
+</div>
+
+<!-- 編輯課程 -->
+<dialog id="dlg">
+  <div class="dlg-head"><h2 id="dlgTitle">新增課程</h2><button class="btn small" onclick="dlg.close()">關閉</button></div>
+  <form class="dlg-body" id="form" method="dialog" onsubmit="saveSession(event)">
+    <div class="grid2">
+      <label class="f">課程代碼<input name="code" placeholder="例:AS2564"></label>
+      <label class="f">類型
+        <select name="type"><option>講座</option><option>Hands-On Lab</option><option>Keynote</option>
+        <option>Technical Deep Dive</option><option>Strategy Talk</option><option>Meetup</option>
+        <option>Expo / 攤位</option><option>社交 / 餐敘</option><option>餐飲</option><option>其他</option></select>
+      </label>
+    </div>
+    <label class="f">課程名稱 *<input name="title" required></label>
+    <div class="grid3">
+      <label class="f">日期
+        <select name="day"><option value="">未排定 / 待確認</option><option value="2026-09-14">9/14(一)</option>
+        <option value="2026-09-15">9/15(二)</option><option value="2026-09-16">9/16(三)</option>
+        <option value="2026-09-17">9/17(四)</option><option value="2026-09-18">9/18(五)</option></select>
+      </label>
+      <label class="f">開始<input name="start" type="time"></label>
+      <label class="f">結束<input name="end" type="time"></label>
+    </div>
+    <div class="grid2">
+      <label class="f">地點<input name="location"></label>
+      <label class="f">講者<input name="speakers"></label>
+    </div>
+    <div class="grid3">
+      <label class="f">優先級
+        <select name="priority"><option value="star">★ 必上</option><option value="alt">○ 備選</option><option value="none">一般</option></select>
+      </label>
+      <label class="f">狀態
+        <select name="status"><option>未定</option><option>已報名</option><option>候補中</option><option>已完成</option></select>
+      </label>
+      <label class="f">Digital Replay
+        <select name="replay"><option value="no">無 / 未知</option><option value="yes">有錄影重播</option></select>
+      </label>
+    </div>
+    <label class="f">課程頁連結<input name="url" placeholder="https://…(自動帶入)"></label>
+    <label class="f">筆記(行前準備、現場心得、Replay 連結…)<textarea name="notes"></textarea></label>
+    <input type="hidden" name="id">
+    <div class="dlg-actions">
+      <button type="button" class="btn danger" id="delBtn" onclick="deleteSession()">刪除</button>
+      <div class="right"><button type="button" class="btn" onclick="dlg.close()">取消</button>
+      <button type="submit" class="btn primary">儲存</button></div>
+    </div>
+  </form>
+</dialog>
+
+<!-- 課程庫 -->
+<dialog id="catDlg">
+  <div class="dlg-head"><h2>課程庫 <span class="hint" id="catCount"></span></h2>
+    <button class="btn small" onclick="catDlg.close()">關閉</button></div>
+  <div class="dlg-body">
+    <label class="f">貼上妳的課單(可整段貼,自動辨識課程代碼)
+      <textarea id="codePaste" placeholder="例:BLD1782, AS2564 AS1719&#10;CS3038-D…"></textarea>
+    </label>
+    <div class="grid2">
+      <label class="f">加入為
+        <select id="batchPriority"><option value="star">★ 必上</option><option value="alt">○ 備選</option></select>
+      </label>
+      <button class="btn primary" style="align-self:end" onclick="batchAdd()">批次比對並加入課表</button>
+    </div>
+    <label class="f">搜尋課程庫<input type="search" id="catQ" placeholder="代碼、關鍵字、講者…" oninput="renderCat()"></label>
+    <div id="catList"></div>
+    <div class="btns" style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn small" onclick="document.getElementById('catFile').click()">匯入課程庫 JSON(抓取工具產出)</button>
+      <input type="file" id="catFile" accept=".json" style="display:none" onchange="importCatalog(event)">
+    </div>
+    <p class="hint">課程庫已包含 AU 官方現場 592 堂與數位 173 堂，共 765 堂；中文名稱優先顯示，並保留英文原名供現場核對。</p>
+  </div>
+</dialog>
+
+<script>
+const KEY='au2026-my-schedule-v1', CATKEY='au2026-catalog-v1';
+const DAYS=[
+  {v:'all',label:'全部'},
+  {v:'2026-09-15',label:'9/15 二',theme:'AI 策略 × Keynote'},
+  {v:'2026-09-16',label:'9/16 三',theme:'技術自動化 × MCP 實作'},
+  {v:'2026-09-17',label:'9/17 四',theme:'大地/營建應用 × 變革領導'},
+  {v:'other',label:'其他日'},
+  {v:'',label:'未排定'}
+];
+const MAIN_DAYS=['2026-09-15','2026-09-16','2026-09-17'];
+
+const SEED=[
+  {
+    "id": "ms001",
+    "code": "KEY1001",
+    "title": "第一天主題演講",
+    "titleEn": "Day 1 Keynote",
+    "type": "主題演講",
+    "day": "2026-09-15",
+    "start": "09:00",
+    "end": "10:30",
+    "location": "Venetian, Expo Hall B, level 2",
+    "speakers": "Andrew Anagnost, Raji Arasu, Clara Shih",
+    "priority": "star",
+    "status": "已報名",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1783353805743001ifWb",
+    "notes": "AU My Schedule：Scheduled"
+  },
+  {
+    "id": "ms002",
+    "code": "CS1046",
+    "title": "利用Insight Builder了解專案和管理層洞察",
+    "titleEn": "Understanding Project and Executive Insights with Insight Builder",
+    "type": "實作課程",
+    "day": "2026-09-15",
+    "start": "11:30",
+    "end": "13:00",
+    "location": "Venetian, Marco Polo 705, level 1",
+    "speakers": "William Fiallos, John Prior, Sheryl Yang",
+    "priority": "star",
+    "status": "已報名",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1773176884019001AQuG",
+    "notes": "AU My Schedule：Scheduled"
+  },
+  {
+    "id": "ms003",
+    "code": "5010",
+    "title": "博覽會招待會",
+    "titleEn": "Expo Reception",
+    "type": "交流餐會",
+    "day": "2026-09-15",
+    "start": "17:00",
+    "end": "18:30",
+    "location": "Venetian, Expo Hall C - Reception, level 2",
+    "speakers": "",
+    "priority": "star",
+    "status": "已報名",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1783353805989001isHD",
+    "notes": "AU My Schedule：Scheduled"
+  },
+  {
+    "id": "ms004",
+    "code": "4523",
+    "title": "Forma Futures 啟動工作坊",
+    "titleEn": "Forma Futures Kickoff Workshop",
+    "type": "課程",
+    "day": "2026-09-15",
+    "start": "19:00",
+    "end": "22:15",
+    "location": "Venetian, Rockhouse , 3377 S Las Vegas Blvd",
+    "speakers": "",
+    "priority": "star",
+    "status": "已報名",
+    "replay": "no",
+    "url": "",
+    "notes": "AU My Schedule：Scheduled"
+  },
+  {
+    "id": "ms005",
+    "code": "KEY1002",
+    "title": "第二天主題演講",
+    "titleEn": "Day 2 Keynote",
+    "type": "主題演講",
+    "day": "2026-09-16",
+    "start": "09:00",
+    "end": "10:45",
+    "location": "Venetian, Expo Hall B, level 2",
+    "speakers": "Andrew Anagnost, Amy Bunszel, Diana Colella, Stephen Hooper, Jeff Kinder",
+    "priority": "star",
+    "status": "已報名",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1783353805870001ibib",
+    "notes": "AU My Schedule：Scheduled"
+  },
+  {
+    "id": "ms006",
+    "code": "4317",
+    "title": "亞太區歡迎交流餐會",
+    "titleEn": "APAC Welcome Reception",
+    "type": "課程",
+    "day": "2026-09-16",
+    "start": "19:00",
+    "end": "21:00",
+    "location": "Venetian, Canonita, 3377 S Las Vegas Blvd",
+    "speakers": "",
+    "priority": "star",
+    "status": "已報名",
+    "replay": "no",
+    "url": "",
+    "notes": "AU My Schedule：Scheduled"
+  },
+  {
+    "id": "ms007",
+    "code": "5011",
+    "title": "設計與製作慶典",
+    "titleEn": "Design and Make Celebration",
+    "type": "交流餐會",
+    "day": "2026-09-17",
+    "start": "18:00",
+    "end": "21:00",
+    "location": "The Linq Promenade",
+    "speakers": "",
+    "priority": "star",
+    "status": "已報名",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1783353806110001ipJE",
+    "notes": "AU My Schedule：Scheduled"
+  },
+  {
+    "id": "ms008",
+    "code": "BES1043",
+    "title": "從模型到圖表：在 Revit 中自動產生電氣單線圖",
+    "titleEn": "From Model to Diagram: Automating Electrical One-Line Generation in Revit",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "11:30",
+    "end": "12:00",
+    "location": "Venetian, Bellini 2004, level 2",
+    "speakers": "Zach Bratcher",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1773174275602001gZfS",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms009",
+    "code": "AS2421",
+    "title": "代理時代的 Revit：為困惑者提供清晰指南",
+    "titleEn": "Revit in the Age of Agents: A Clear-Eyed Guide for the Perplexed",
+    "type": "技術深度解析",
+    "day": "2026-09-16",
+    "start": "11:30",
+    "end": "12:00",
+    "location": "Venetian, Murano 3202, level 3",
+    "speakers": "adi shavit",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775463441687001Dz9G",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms010",
+    "code": "BLD1669",
+    "title": "透過 Autodesk Forma 產業雲端連接 AECO 工作流程",
+    "titleEn": "Connecting AECO Workflows End-to-End with the Autodesk Forma Industry Cloud",
+    "type": "技術深度解析",
+    "day": "2026-09-17",
+    "start": "08:30",
+    "end": "09:30",
+    "location": "Venetian, Murano 3302, level 3",
+    "speakers": "Alejandra Beaujon, Joey Matla",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774864688587001G6Jg",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms011",
+    "code": "FAB2066",
+    "title": "規則驅動的建築設計：連結結構分析、Autodesk Forma 與資訊化設計",
+    "titleEn": "Rule-Driven Building Design: Connecting Structural Analysis, Autodesk Forma, and Informed Design",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "11:30",
+    "end": "12:00",
+    "location": "Venetian, Titian 2303, level 2",
+    "speakers": "steve dewitt, Kelly Justin Wilson",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775157800759001qpcp",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms012",
+    "code": "CES2393",
+    "title": "以 Autodesk Forma 為中心：為多學科工程設計真實世界的通用設計環境 (CDE)",
+    "titleEn": "Autodesk Forma at the Center: Designing a Real-World CDE for Multidiscipline Engineering",
+    "type": "Strategy Talk",
+    "day": "2026-09-17",
+    "start": "13:30",
+    "end": "14:30",
+    "location": "Stage 02",
+    "speakers": "Rafael Lucero, Ian McGovern",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775456184747001EZxh",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms013",
+    "code": "CES3344",
+    "title": "使用 Revit 發展高架橋和車站建築的鋼筋施工圖：案例研究",
+    "titleEn": "Developing Reinforcement Shop Drawings for Viaducts and Station Buildings Using Revit: A Case Study",
+    "type": "技術深度解析",
+    "day": "2026-09-17",
+    "start": "12:30",
+    "end": "13:00",
+    "location": "Venetian, Galileo 902, level 1",
+    "speakers": "Safi Hage, Lovneet MAHAJAN",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775575599788001Q6xc",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms014",
+    "code": "BLD1301",
+    "title": "揭秘人工智慧：在公司中使用 LLM、Autodesk Assistant 和 MCP 找到人工智慧入門的最佳切入點",
+    "titleEn": "Demystifying AI: Find the sweet spot for starting up in AI using LLMs, Autodesk Assistant, and MCPs in your company",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "13:30",
+    "end": "14:30",
+    "location": "Venetian, Lido 3006, level 3",
+    "speakers": "David Banyard, STEPHANIE CATALINA, Xiaoxuan Peng",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774013919988001GSns",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms015",
+    "code": "BES1091",
+    "title": "從人工智慧驅動的軟體工程中汲取經驗，以改善設計並提高生產力",
+    "titleEn": "Lessons from AI-Driven Software Engineering That Can Improve Design and Make Productivity",
+    "type": "Strategy Talk",
+    "day": "2026-09-15",
+    "start": "11:30",
+    "end": "12:00",
+    "location": "Stage 01",
+    "speakers": "Anthony Ruto, Andy Harris",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1773246178967001DXWo",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms016",
+    "code": "AS1719",
+    "title": "90分鐘內制定貴公司的AI採用計劃",
+    "titleEn": "Build Your Firm's AI Adoption Plan in 90 Minutes",
+    "type": "Spark Session",
+    "day": "2026-09-17",
+    "start": "16:30",
+    "end": "18:00",
+    "location": "Venetian, Veronese 2504, level 2",
+    "speakers": "KENTON GRANT, Evan Troxel",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774914711930001JQLX",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms017",
+    "code": "AS1411",
+    "title": "堆疊倒置是真的：人工智慧如何改變 CAD 管理員的實際工作",
+    "titleEn": "The Stack Inversion Is Real: How AI Is Changing What CAD Managers Actually Do",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "11:30",
+    "end": "12:00",
+    "location": "Venetian, Titian 2204, level 2",
+    "speakers": "Shaan Hurley",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774375433873001H5lm",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms018",
+    "code": "BLD1826",
+    "title": "從變更到清晰：Revit 和 Autodesk Forma 資料管理中更佳的多專業協調模型",
+    "titleEn": "From Change to Clarity: Better Multidiscipline Coordination Model in Revit and Autodesk Forma Data Management",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "15:00",
+    "end": "16:00",
+    "location": "Venetian, Titian 2204, level 2",
+    "speakers": "Mihaela Stan, Leslaw Janus",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775036255404001bQln",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms019",
+    "code": "CS1881",
+    "title": "您應該使用但可能尚未使用的 30 個 Autodesk Forma 功能",
+    "titleEn": "30 Autodesk Forma Features You Should Be Using—But Probably Aren’t",
+    "type": "Expert Elite Sessions",
+    "day": "2026-09-17",
+    "start": "12:30",
+    "end": "13:00",
+    "location": "Venetian, Murano 3302, level 3",
+    "speakers": "Shir Rustici, Jonathan Hand",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775069175316001ZfL2",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms020",
+    "code": "CS3038",
+    "title": "面向 AEC 的智慧 AI：利用 Autodesk 協調自主專案交付",
+    "titleEn": "Agentic AI for AEC: Orchestrating Autonomous Project Delivery with Autodesk",
+    "type": "技術深度解析",
+    "day": "2026-09-17",
+    "start": "10:00",
+    "end": "11:00",
+    "location": "Venetian, Veronese 2503, level 2",
+    "speakers": "Irene Won, Adam Sheather",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775546360604001IxdI",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms021",
+    "code": "BES3735",
+    "title": "人工智慧驅動的數位孿生：標準化和擴展關鍵任務基礎設施",
+    "titleEn": "AI-Driven Digital Twins: Standardizing and Scaling Mission-Critical Infrastructure",
+    "type": "Strategy Talk",
+    "day": "2026-09-15",
+    "start": "12:30",
+    "end": "13:00",
+    "location": "Venetian, Lido 3103, level 3",
+    "speakers": "Juliana Mizumoto",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775595219898001qeb0",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms022",
+    "code": "FAB1143",
+    "title": "使用 AutoCAD 和 Autodesk Forma 資料管理更好地協作：共享、追蹤、多用戶標記、簽出",
+    "titleEn": "Collaborate Better with AutoCAD and Autodesk Forma Data Management: Share, Trace, Multi-User Markups, Checkout",
+    "type": "實作課程",
+    "day": "2026-09-15",
+    "start": "16:30",
+    "end": "18:00",
+    "location": "Venetian, Marco Polo 802, level 1",
+    "speakers": "Helen Chen",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1773361299876001nHLX",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms023",
+    "code": "CS1046",
+    "title": "利用Insight Builder了解專案和管理層洞察",
+    "titleEn": "Understanding Project and Executive Insights with Insight Builder",
+    "type": "實作課程",
+    "day": "2026-09-17",
+    "start": "16:00",
+    "end": "17:30",
+    "location": "Venetian, Marco Polo 705, level 1",
+    "speakers": "William Fiallos, John Prior, Sheryl Yang",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1773176884019001AQuG",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms024",
+    "code": "BES1324",
+    "title": "建構用於 BIM 的 MCP 伺服器：透過 AEC 資料模型將 Any AI 連接到即時 Autodesk Forma 模型",
+    "titleEn": "Building an MCP Server for BIM: Connect Any AI to Live Autodesk Forma Models via AEC Data Model",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "16:30",
+    "end": "17:30",
+    "location": "Venetian, Titian 2303, level 2",
+    "speakers": "Parthasarathi Mishra, Vijaya Adigopula",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774105727626001sY31",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms025",
+    "code": "BLD1972",
+    "title": "在 Sweco 匯聚：整合工作流程和 XR 如何增強並革新多學科項目",
+    "titleEn": "Converge at Sweco How Integrated Workflows & XR Enhanced, Revolutionized a Multidisciplinary Project",
+    "type": "Strategy Talk",
+    "day": "2026-09-16",
+    "start": "11:30",
+    "end": "12:00",
+    "location": "Venetian, Titian 2204, level 2",
+    "speakers": "Zinta Rize, Jani Pehkonen",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775120468932001Srdw",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms026",
+    "code": "MFG3883",
+    "title": "從 AutoCAD 工具集到 Inventor：使用 Desktop Connector 和 Autodesk Forma 實現連網工作流程",
+    "titleEn": "From AutoCAD Toolsets to Inventor: Enabling Connected Workflows with Desktop Connector and Autodesk Forma",
+    "type": "技術深度解析",
+    "day": "2026-09-17",
+    "start": "12:30",
+    "end": "13:00",
+    "location": "Venetian, Veronese 2503, level 2",
+    "speakers": "Sagar G S, Chaitanya Belsare",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775602556775001iwoo",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms027",
+    "code": "BLD2369",
+    "title": "下游始於上游：治理如何將專案資料轉化為營運價值",
+    "titleEn": "Downstream Starts Upstream: How Governance Turns Project Data into Operational Value",
+    "type": "Strategy Talk",
+    "day": "2026-09-16",
+    "start": "12:30",
+    "end": "13:00",
+    "location": "Venetian, Murano 3302, level 3",
+    "speakers": "NATALIA CASTILLO, Robert S. Olsen",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775445411962001HTMe",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms028",
+    "code": "BLD2228",
+    "title": "創建您自己的 AI 助手，可同時與 Revit 和其他程式交互",
+    "titleEn": "Create Your Own AI Assistant That Interacts with Revit and Other Programs at the Same Time",
+    "type": "Expert Elite Sessions",
+    "day": "2026-09-15",
+    "start": "15:00",
+    "end": "16:00",
+    "location": "Venetian, San Polo 3406, level 3",
+    "speakers": "Marcello Sgambelluri",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775253006464001iAnB",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms029",
+    "code": "BLD2378",
+    "title": "邁向下一代施工：從互聯流程到預測性決策",
+    "titleEn": "Shift to Next-Generation Construction: From Connected Processes to Predictive Decision Making",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "13:30",
+    "end": "14:30",
+    "location": "Venetian, Veronese 2504, level 2",
+    "speakers": "Yui Kikuchi, Yoshinori Shimizu, Takuya Ogawa",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775451684340001cQcW",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms030",
+    "code": "AS3057",
+    "title": "AEC 路線圖：建築",
+    "titleEn": "AEC Roadmap: Architecture",
+    "type": "Roadmap",
+    "day": "2026-09-16",
+    "start": "15:00",
+    "end": "16:00",
+    "location": "Venetian, Palazzo D, level 5",
+    "speakers": "Lauren Poon, Matt Arsenault, Daniel Gameiro, Andrea Vallés",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775549540594001DiQp",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms031",
+    "code": "BLD3100",
+    "title": "業主的需求：關於 BIM、CDE 以及如何成為首選數位合作夥伴的誠實指導",
+    "titleEn": "What Owners Want: Honest Guidance on BIM, CDEs, and Becoming a Preferred Digital Partner",
+    "type": "Strategy Talk",
+    "day": "2026-09-16",
+    "start": "11:30",
+    "end": "12:00",
+    "location": "Venetian, Lido 3001B, level 3",
+    "speakers": "ahmed alwaeel, abdulrahman alkholy",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775554436824001bIBe",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms032",
+    "code": "CES2635",
+    "title": "利用 BIM 深入鑽探：在大型水力發電計畫中實現隧道和錨桿的自動化",
+    "titleEn": "Drilling Down with BIM: Automating Tunnels and Rock Bolts in a Hydropower Megaproject",
+    "type": "技術深度解析",
+    "day": "2026-09-16",
+    "start": "12:30",
+    "end": "13:00",
+    "location": "Venetian, Bellini 2102, level 2",
+    "speakers": "Emmanuel CHOCQ, Maher DJEDIDI",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775498002305001alUU",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms033",
+    "code": "CS2912",
+    "title": "解決設計中 90% 的鋼筋問題：透過標準、自動化和協同創造實現施工",
+    "titleEn": "Solving 90% of Rebar Issues in Design: Construction Through Standards, Automation, and Co-Creation",
+    "type": "技術深度解析",
+    "day": "2026-09-16",
+    "start": "16:30",
+    "end": "17:30",
+    "location": "Venetian, Veronese 2403, level 2",
+    "speakers": "Hiromitsu 曽根, Hiroya 渡邉",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775523319813001pANq",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms034",
+    "code": "CS1509",
+    "title": "彌合差距：用於 ERP 和業主整合的自訂 Autodesk Forma Construction Connect 工作流程",
+    "titleEn": "Bridging the Gap: Custom Autodesk Forma Construction Connect Workflows for ERP and Owner Integration",
+    "type": "技術深度解析",
+    "day": "2026-09-17",
+    "start": "08:30",
+    "end": "09:30",
+    "location": "Venetian, Casanova 506, level 1",
+    "speakers": "Christopher Baze, Varun Bhartiya",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774511766554001DdGe",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms035",
+    "code": "AS3301",
+    "title": "Revit雲端工作共享遷移已到來－但連結模型仍需要控制平面",
+    "titleEn": "Revit Cloud Worksharing Migration Has Arrived—But Linked Models Still Need a Control Plane",
+    "type": "技術深度解析",
+    "day": "2026-09-17",
+    "start": "11:30",
+    "end": "12:00",
+    "location": "Venetian, Lido 3006, level 3",
+    "speakers": "Moses Scott, Zhong Wu, João Martins",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775573038879001ZEog",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms036",
+    "code": "CES3027",
+    "title": "連接國家：阿聯酋基礎設施和投資部 (MOEI) 如何利用 Autodesk Forma 統一阿聯酋的基礎設施交付",
+    "titleEn": "Connecting a Nation: How MOEI Unified Infrastructure Delivery Across the UAE Using Autodesk Forma",
+    "type": "Strategy Talk",
+    "day": "2026-09-17",
+    "start": "10:00",
+    "end": "11:00",
+    "location": "Venetian, Lido 3001B, level 3",
+    "speakers": "Moza Neimi, abdulrahman alkholy",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775544382808001qQK6",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms037",
+    "code": "BLD3171",
+    "title": "利用 BIM 自動化和 AI 代理進行設計需求驗證",
+    "titleEn": "Design Requirements Verification with BIM Automation and AI Agents",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "11:30",
+    "end": "12:00",
+    "location": "Venetian, Veronese 2403, level 2",
+    "speakers": "Alexandre HERSANT, Abdelhakim BENATTIA",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775563365254001pZTC",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms038",
+    "code": "CS1256",
+    "title": "使用Autodesk Forma Takeoff滿足碳抵消和永續性要求",
+    "titleEn": "Using Autodesk Forma Takeoff for Carbon Offset and Sustainability Requirements",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "11:30",
+    "end": "12:00",
+    "location": "Venetian, Casanova 503, level 1",
+    "speakers": "Nathan Love, Adam Sheather",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1773880605902001MD4R",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms039",
+    "code": "CS3088",
+    "title": "打破資料孤島：利用 Power BI 連接設計與施工洞察",
+    "titleEn": "Breaking Data Silos: Connecting Design and Construction Insights with Power BI",
+    "type": "技術深度解析",
+    "day": "2026-09-17",
+    "start": "10:00",
+    "end": "11:00",
+    "location": "Venetian, San Polo 3501A, level 3",
+    "speakers": "Trupti Deshpande, Juan Diego Aranda Yaulimango, Vishwa Shah",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775553043537001lzFw",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms040",
+    "code": "CS1239",
+    "title": "互聯協調3級：利用Autodesk Forma中的模型協調功能提升衝突解決能力",
+    "titleEn": "Connected Coordination Level 3: Elevate Clash Resolution Using the Power of Model Coordination in Autodesk Forma",
+    "type": "實作課程",
+    "day": "2026-09-15",
+    "start": "11:30",
+    "end": "13:00",
+    "location": "Venetian, Galileo 905, level 1",
+    "speakers": "Deepak Maini",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1773808610493001O7g8",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms041",
+    "code": "CS1239",
+    "title": "互聯協調3級：利用Autodesk Forma中的模型協調功能提升衝突解決能力",
+    "titleEn": "Connected Coordination Level 3: Elevate Clash Resolution Using the Power of Model Coordination in Autodesk Forma",
+    "type": "實作課程",
+    "day": "2026-09-16",
+    "start": "14:00",
+    "end": "15:30",
+    "location": "Venetian, Marco Polo 805, level 1",
+    "speakers": "Deepak Maini",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1773808610493001O7g8",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms042",
+    "code": "MFG2231",
+    "title": "PLM 高峰會 | 歡迎致詞：Autodesk 資料管理副總裁 Srinath Jonnalagadda",
+    "titleEn": "PLM Summit | Welcome with Srinath Jonnalagadda, Vice President, Data Management, Autodesk",
+    "type": "PLM Summit",
+    "day": "2026-09-15",
+    "start": "11:00",
+    "end": "11:30",
+    "location": "Venetian, Titian 2203, level 2",
+    "speakers": "Srinath Jonnalagadda",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775253794749001wUpK",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms043",
+    "code": "CS2285",
+    "title": "AEC 路線圖：Autodesk Forma——管理、標準與洞察",
+    "titleEn": "AEC Roadmap: Autodesk Forma—Admin, Standards, and Insight",
+    "type": "Roadmap",
+    "day": "2026-09-17",
+    "start": "13:30",
+    "end": "14:30",
+    "location": "Venetian, Palazzo D, level 5",
+    "speakers": "Sheryl Yang, Aishwary Gupta, Ross Collinson, Jonathan Hand, Avani Saxena",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775373921780001f7B3",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms044",
+    "code": "BES3331",
+    "title": "連續碰撞檢測與週期性碰撞檢測​​：模型協調與Autodesk AI能否取代Navisworks？",
+    "titleEn": "Continuous Versus Periodic Clash Detection: Can Model Coordination and Autodesk AI Replace Navisworks?",
+    "type": "技術深度解析",
+    "day": "2026-09-17",
+    "start": "08:30",
+    "end": "09:30",
+    "location": "Venetian, Lido 3006, level 3",
+    "speakers": "Karan Singh, Stephen Brooke",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775574921137001kul3",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms045",
+    "code": "BES1672",
+    "title": "從傳統到下一代：將 HEC-RAS 模型庫現代化為雲端就緒型InfoWorks ICM",
+    "titleEn": "From Legacy to Next Generation: Modernizing HEC-RAS Model Libraries into Cloud-Ready InfoWorks ICM",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "11:30",
+    "end": "12:00",
+    "location": "Venetian, Bellini 2102, level 2",
+    "speakers": "MUSTAFA DAL, Cihat ADSIZ, Özgüray AYDIN",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774870269643001a6V8",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms046",
+    "code": "BLD1611",
+    "title": "Autodesk Forma 的營運化：擴展基礎設施交付的經驗教訓",
+    "titleEn": "Operationalizing Autodesk Forma: Lessons from Scaling Infrastructure Delivery",
+    "type": "Strategy Talk",
+    "day": "2026-09-15",
+    "start": "12:30",
+    "end": "13:00",
+    "location": "Venetian, Titian 2304, level 2",
+    "speakers": "Allison Maclellan",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774643871629001cAuL",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms047",
+    "code": "BLD2468",
+    "title": "從分散的任務到標準化的施工工作流程：透過 Autodesk Forma 和資料庫進行連接",
+    "titleEn": "From Disconnected Tasks to Standardized Construction Workflows: Connected by Autodesk Forma with a Database",
+    "type": "技術深度解析",
+    "day": "2026-09-16",
+    "start": "12:30",
+    "end": "13:00",
+    "location": "Venetian, Veronese 2504, level 2",
+    "speakers": "Saori 櫻井",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775476569447001ory2",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms048",
+    "code": "BLD1842",
+    "title": "Revit 2027 的新增功能：人工智慧、資料和互聯工作流程",
+    "titleEn": "What’s New in Revit 2027: AI, Data, and Connected Workflows",
+    "type": "技術深度解析",
+    "day": "2026-09-16",
+    "start": "16:00",
+    "end": "17:30",
+    "location": "Venetian, Venetian G, level 2",
+    "speakers": "Dan Peticila, Cesar Escalante, Scott D Davis",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775048095039001Gm5R",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms049",
+    "code": "AS4073",
+    "title": "使用 Autodesk Assistant 和 MCP 釋放 Dynamo 的強大功能：從意圖到可檢查圖表",
+    "titleEn": "Unleashing Dynamo with Autodesk Assistant and MCP: From Intent to Inspectable Graphs",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "16:30",
+    "end": "17:30",
+    "location": "Venetian, Veronese 2404, level 2",
+    "speakers": "JT Pierson, Achintya Bhat",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775616780070001pTwr",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms050",
+    "code": "BLD1870",
+    "title": "利用 Autodesk 平台服務建構 AI 就緒的 BIM 資料骨幹網",
+    "titleEn": "Building an AI-Ready BIM Data Backbone with Autodesk Platform Services",
+    "type": "技術深度解析",
+    "day": "2026-09-16",
+    "start": "12:30",
+    "end": "13:00",
+    "location": "Venetian, Veronese 2404, level 2",
+    "speakers": "Moritz Mombour, Valeriia Vlasenko",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775065044756001olE1",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms051",
+    "code": "CES1289",
+    "title": "大規模資料中心交付：使用 Autodesk Data Exchange 從 Autodesk Forma 選擇性地匯出 IFC 文件",
+    "titleEn": "Data-Centered Delivery at Scale: Selective IFC Exports from Autodesk Forma Using Autodesk Data Exchange​",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "11:30",
+    "end": "12:00",
+    "location": "Venetian, Lido 3006, level 3",
+    "speakers": "Adrian Fernandez Sanchez, Aleksandra Gorczyca, Marc Sleegers",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1773989460627001ya6c",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms052",
+    "code": "CS1583",
+    "title": "使用 Autodesk Forma Build 和 Autodesk Forma Assets 進行遺產修復",
+    "titleEn": "Using Autodesk Forma Build and Autodesk Forma Assets for Heritage Rehabilitation",
+    "type": "技術深度解析",
+    "day": "2026-09-17",
+    "start": "10:00",
+    "end": "11:00",
+    "location": "Venetian, Galileo 902, level 1",
+    "speakers": "Andrew Macdonald, Arturo Baselli Gutierrez",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774622947973001GwRB",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms053",
+    "code": "CS1146",
+    "title": "告別填寫表格：大規模自動產生 Autodesk Forma 表單",
+    "titleEn": "Stop Filling Out Forms: Auto-Generating Autodesk Forma Forms at Scale",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "13:30",
+    "end": "14:30",
+    "location": "Venetian, Murano 3302, level 3",
+    "speakers": "Dominic Martens",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1773366037780001eRG0",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms054",
+    "code": "IM1402",
+    "title": "設計與製造技術管理員聚會：與 CAD、PDM 和 PLM 管理同儕交流、分享和學習",
+    "titleEn": "Design and Manufacturing Tech Admin Meetup: Connect, Share, and Learn with CAD, PDM, and PLM Manager Peers",
+    "type": "交流聚會",
+    "day": "2026-09-17",
+    "start": "08:30",
+    "end": "09:30",
+    "location": "Venetian, Bellini 2105-2106, level 2",
+    "speakers": "Paul Munford, Ron Hyman",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774364916334001twW6",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms055",
+    "code": "AS2564",
+    "title": "以人工智慧為導向的 BIM 基礎：使用 Revit MCP、Dynamo 和 pyRevit 實現一鍵式跨學科自動化",
+    "titleEn": "AI-Ready BIM Foundation: Push-Button Cross-Discipline Automation with Revit MCP, Dynamo, and pyRevit",
+    "type": "技術深度解析",
+    "day": "2026-09-16",
+    "start": "15:00",
+    "end": "16:00",
+    "location": "Venetian, Lido 3006, level 3",
+    "speakers": "Mayank Sharma, Julide Bozoglu",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775490384909001aOIs",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms056",
+    "code": "4512",
+    "title": "Forma CS 高峰會 | Autodesk Forma 管理與標準化圓桌會議​​：建立可擴展的資料基礎",
+    "titleEn": "Forma CS Summit l The Autodesk Forma Admin & Standardization Roundtable: Building a Scalable Data Foundation",
+    "type": "Forma CS Summit",
+    "day": "2026-09-17",
+    "start": "08:30",
+    "end": "10:00",
+    "location": "Venetian, Titian 2203, level 2",
+    "speakers": "Ross Collinson, Will Marinos, Neree Croteau",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1782309443204001o3G0",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms057",
+    "code": "CS1605",
+    "title": "領先一步：VDC 領導者的 AI 行動指南，幫助您在組織尚未做好準備時應對挑戰",
+    "titleEn": "Ahead of the Curve: A VDC Leader's AI Playbook for When Your Organization Isn't Ready",
+    "type": "Strategy Talk",
+    "day": "2026-09-17",
+    "start": "13:30",
+    "end": "14:30",
+    "location": "Stage 01",
+    "speakers": "Blake Titus",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774638367362001MVZU",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms058",
+    "code": "CES3061",
+    "title": "從鑽孔到建築：使用 GeoDin Ground 在 Civil 3D 中直接進行高階地面建模",
+    "titleEn": "From Borehole to Building: Advanced Ground Modeling Directly in Civil 3D with GeoDin Ground",
+    "type": "Strategy Talk",
+    "day": "2026-09-15",
+    "start": "16:30",
+    "end": "17:30",
+    "location": "Venetian, San Polo 3501A, level 3",
+    "speakers": "Devrez Karabacak",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775550168131001QkPo",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms059",
+    "code": "BLD3677",
+    "title": "不再是「BIM專家」：推動建築業的真正數位轉型",
+    "titleEn": "No More “BIM Guy”: Driving Real Digital Transformation Across Construction",
+    "type": "Strategy Talk",
+    "day": "2026-09-16",
+    "start": "15:00",
+    "end": "16:00",
+    "location": "Venetian, Galileo 902, level 1",
+    "speakers": "Danielle Dy Buncio, Ravi Wood, Prateek Shailesh Chitnis, Morgan Drivas, Brett Settles",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775592261421001Uu4y",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms060",
+    "code": "BES1547",
+    "title": "使用 MCP 在 Autodesk Forma 中運行智慧 AI 專案工作流程",
+    "titleEn": "Agentic AI Running Project Workflows in Autodesk Forma with MCP",
+    "type": "技術深度解析",
+    "day": "2026-09-16",
+    "start": "13:30",
+    "end": "14:30",
+    "location": "Venetian, Casanova 506, level 1",
+    "speakers": "Luis Salmeron, Farzad Towhidi",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774559316159001Slpf",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms061",
+    "code": "CS4485",
+    "title": "使用Autodesk Forma建構更智慧的資料中心交付資產策略",
+    "titleEn": "A Smarter Asset Strategy for Data Center Delivery with Autodesk Forma",
+    "type": "Expert Elite Sessions",
+    "day": "2026-09-15",
+    "start": "11:30",
+    "end": "12:30",
+    "location": "Stage 02",
+    "speakers": "Matthew Harraka, Bobby Hinojosa",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1781722817989001uRNW",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms062",
+    "code": "AU1299",
+    "title": "超越基礎架構：擴展 10 年的遺留程式碼以適應下一代",
+    "titleEn": "Beyond the Foundation: Scaling 10 Years of Legacy Code for the Next Generation",
+    "type": "Expert Elite Sessions",
+    "day": "2026-09-17",
+    "start": "10:00",
+    "end": "11:00",
+    "location": "Venetian, Casanova 506, level 1",
+    "speakers": "Gil Cordle, R.K. McSwain",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774013289942001kMdO",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms063",
+    "code": "AS2145",
+    "title": "互聯設計：Autodesk Forma 與 Revit 的真實協作工作流程",
+    "titleEn": "Connected Design: Real-World Collaboration Workflows Across Autodesk Forma and Revit",
+    "type": "Strategy Talk",
+    "day": "2026-09-15",
+    "start": "13:30",
+    "end": "14:30",
+    "location": "Venetian, Murano 3202, level 3",
+    "speakers": "Matt Arsenault, Caoimhe Loftus",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775222830239001THYa",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms064",
+    "code": "BES4067",
+    "title": "變革推動者：掌握面向多學科 AEC 公司的智能體 AI 和 MCP 工作流程",
+    "titleEn": "Agents of Change: Mastering Agentic AI and MCP Workflows for the Multidiscipline AEC Firm",
+    "type": "Strategy Talk",
+    "day": "2026-09-16",
+    "start": "16:30",
+    "end": "17:30",
+    "location": "Venetian, Lido 3006, level 3",
+    "speakers": "Michael Gustafson, Andrew Sundal",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775616258542001g0dr",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms065",
+    "code": "AU2562",
+    "title": "Autodesk 女性網路聚會",
+    "titleEn": "Autodesk Women’s Network Meetup",
+    "type": "交流聚會",
+    "day": "2026-09-16",
+    "start": "13:30",
+    "end": "14:30",
+    "location": "Venetian, Bellini 2105-2106, level 2",
+    "speakers": "Christi Clay",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775490040682001qtMy",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms066",
+    "code": "CES3838",
+    "title": "CAD 與 GIS 的橋樑：簡化工作流程，實現更快、更聰明的方案開發",
+    "titleEn": "Bridging CAD and GIS: A Streamlined Workflow for Faster, Smarter Proposal Development",
+    "type": "Strategy Talk",
+    "day": "2026-09-17",
+    "start": "11:30",
+    "end": "12:00",
+    "location": "Venetian, Veronese 2503, level 2",
+    "speakers": "Joan Rickard",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775599971273001BEGx",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms067",
+    "code": "BLD1154",
+    "title": "BIM 智慧代理：透過 AI 和 AEC 資料模型，從 Autodesk Forma 獲取即時 QTO、碳排放、成本和合規性信息",
+    "titleEn": "BIM Intelligence Agent: Live QTO, Carbon, Cost, and Compliance from Autodesk Forma via AI and AEC Data Model",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "15:00",
+    "end": "16:00",
+    "location": "Venetian, Bellini 2002, level 2",
+    "speakers": "Parthasarathi Mishra, Vijaya Adigopula",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1773413958304001UctA",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms068",
+    "code": "CES3469",
+    "title": "AEC 路線圖：結構",
+    "titleEn": "AEC Roadmap: Structures",
+    "type": "Roadmap",
+    "day": "2026-09-17",
+    "start": "12:00",
+    "end": "12:45",
+    "location": "Venetian, Palazzo D, level 5",
+    "speakers": "Dan Peticila, Pawel Piechnik, Piotr Pysz",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775581947103001G9p4",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms069",
+    "code": "AS2183",
+    "title": "使用 MCP 建立自我改進的 AEC 資料工作流程",
+    "titleEn": "Using MCP to Build Self-Improving AEC Data Workflows",
+    "type": "技術深度解析",
+    "day": "2026-09-16",
+    "start": "13:30",
+    "end": "14:30",
+    "location": "Venetian, Bellini 2002, level 2",
+    "speakers": "Nabil Sadeg",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775232273801001tuxE",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms070",
+    "code": "BES1427",
+    "title": "消除盲點：Autodesk MCP輔助AI在多CDE平台專案中的應用",
+    "titleEn": "No More Blind Spots: Autodesk MCP Driving AI Across Multi-CDE Platform Projects",
+    "type": "Strategy Talk",
+    "day": "2026-09-17",
+    "start": "08:30",
+    "end": "09:30",
+    "location": "Venetian, Lido 3103, level 3",
+    "speakers": "Aaron Traylen",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774400873782001bTcx",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms071",
+    "code": "BES1377",
+    "title": "幾分鐘內建置自訂 AEC 應用：使用 FORMA 和 VIKTOR.AI 進行人工智慧輔助開發",
+    "titleEn": "Building Custom AEC Apps in Minutes: AI-Assisted Development with FORMA and VIKTOR.AI",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "13:30",
+    "end": "14:30",
+    "location": "Venetian, Titian 2303, level 2",
+    "speakers": "Peter Madlener, Jordana Rosa",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774292377616001G7rN",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms072",
+    "code": "BLD3760",
+    "title": "打破桌面壁壘：雲端 Dynamo 實現可擴展的 Revit 和 Civil 3D 自動化",
+    "titleEn": "Break the Desktop Barrier: Dynamo in the Cloud for Scalable Revit and Civil 3D Automation",
+    "type": "技術深度解析",
+    "day": "2026-09-15",
+    "start": "15:00",
+    "end": "16:00",
+    "location": "Venetian, Veronese 2403, level 2",
+    "speakers": "Achintya Bhat, JT Pierson",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775596414059001FlQ4",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms073",
+    "code": "CS1882",
+    "title": "從提示到專案成果：在Autodesk Forma中使用Autodesk Assistant",
+    "titleEn": "From Prompts to Project Outcomes: Using Autodesk Assistant in Autodesk Forma",
+    "type": "Expert Elite Sessions",
+    "day": "2026-09-15",
+    "start": "11:30",
+    "end": "12:00",
+    "location": "Venetian, San Polo 3406, level 3",
+    "speakers": "Shir Rustici, Kristina Youngblut",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775069792076001OgyF",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms074",
+    "code": "AU4170",
+    "title": "衡量信任感知：如何將信任轉化為實質成果",
+    "titleEn": "Measuring Perceptions of Trust: How to Turn Trust into Tangible Results",
+    "type": "技術深度解析",
+    "day": "2026-09-17",
+    "start": "13:30",
+    "end": "14:30",
+    "location": "Venetian, Casanova 503, level 1",
+    "speakers": "Kate Adam, Mariluz Blandon",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775625681944001rNQy",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms075",
+    "code": "AU4189",
+    "title": "最大化 Autodesk 平台服務價值：更智慧的使用，更強的控制AI就緒規模化",
+    "titleEn": "Maximizing Autodesk Platform Services Value: Smarter Usage, Greater Control, AI-Ready Scale",
+    "type": "Strategy Talk",
+    "day": "2026-09-17",
+    "start": "08:30",
+    "end": "09:30",
+    "location": "Venetian, Veronese 2404, level 2",
+    "speakers": "Dwanill Mehta",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775627991415001f2D1",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms076",
+    "code": "CES1026",
+    "title": "Autodesk Forma 基礎設施現場設計：快速建造上下文和設置場地",
+    "titleEn": "Autodesk Forma Site Design for Infrastructure: Rapid Context and Site Setup",
+    "type": "Expert Elite Sessions",
+    "day": "2026-09-15",
+    "start": "11:30",
+    "end": "12:00",
+    "location": "Venetian, Veronese 2504, level 2",
+    "speakers": "Shelby L Smith, Hilde Bakkeli",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1773148305139001NVwm",
+    "notes": "AU My Schedule：Favorited"
+  },
+  {
+    "id": "ms077",
+    "code": "BLD3633",
+    "title": "從模型到信任：讓 BIM 在施工上可靠應用",
+    "titleEn": "From Model to Trust: Making BIM Reliable for Construction",
+    "type": "技術深度解析",
+    "day": "2026-09-17",
+    "start": "10:00",
+    "end": "11:00",
+    "location": "Venetian, Murano 3202, level 3",
+    "speakers": "Debora Machado, Edward Leonard, Jesse Young",
+    "priority": "alt",
+    "status": "未定",
+    "replay": "no",
+    "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775590183751001foul",
+    "notes": "AU My Schedule：Favorited"
+  }
+];
+
+let data=load(), CATALOG=[], curDay='all', curFilters=new Set(), q='';
+const dlg=document.getElementById('dlg'), catDlg=document.getElementById('catDlg');
+
+function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}return SEED.map(s=>({...s}));}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){alert('儲存失敗:請立即匯出 JSON 備份。');}}
+function uid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function esc(x){return (x||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function badge(cls,txt){return '<span class="badge '+cls+'">'+txt+'</span>';}
+
+/* ---------- 課程庫載入 ---------- */
+function setCatStat(){
+  document.getElementById('catStat').textContent='課程庫 '+CATALOG.length+' 場';
+  const c=document.getElementById('catCount');if(c)c.textContent='('+CATALOG.length+' 場)';
+}
+function normCat(arr){
+  return (arr||[]).filter(s=>s&&s.title).map(s=>({code:(s.code||'').toUpperCase(),title:s.title,titleEn:s.titleEn||'',day:s.day||'',
+    start:s.start||'',end:s.end||'',location:s.location||'',type:s.type||'講座',speakers:s.speakers||'',
+    url:s.url||'',delivery:s.delivery||'inperson',enroll:!!s.enroll,replay:!!s.replay}));
+}
+function mergeCat(arr){
+  const key=s=>(s.code||s.title)+'|'+s.day+'|'+s.start;
+  const map={};CATALOG.forEach(s=>map[key(s)]=s);normCat(arr).forEach(s=>map[key(s)]=s);
+  CATALOG=Object.values(map);
+  try{localStorage.setItem(CATKEY,JSON.stringify(CATALOG));}catch(e){}
+  setCatStat();
+}
+(function initCatalog(){
+  try{const c=localStorage.getItem(CATKEY);if(c)CATALOG=JSON.parse(c);}catch(e){}
+  setCatStat();
+  fetch('catalog.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{
+    if(j&&j.sessions){
+      CATALOG=normCat(j.sessions);
+      try{localStorage.setItem(CATKEY,JSON.stringify(CATALOG));}catch(e){}
+      setCatStat();
+    }
+  }).catch(()=>{ /* 無網路時沿用上次成功下載的課程庫 */ });
+})();
+function importCatalog(ev){
+  const f=ev.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const j=JSON.parse(r.result);mergeCat(Array.isArray(j)?j:j.sessions);
+    alert('課程庫已更新,共 '+CATALOG.length+' 場。');renderCat();}catch(e){alert('格式錯誤。');}};
+  r.readAsText(f);ev.target.value='';
+}
+
+/* ---------- 課程庫 UI ---------- */
+function openCatalog(){renderCat();catDlg.showModal();}
+function renderCat(){
+  const kw=(document.getElementById('catQ').value||'').trim().toLowerCase();
+  const el=document.getElementById('catList');
+  let items=CATALOG;
+  if(kw)items=items.filter(s=>(s.code+' '+s.title+' '+(s.titleEn||'')+' '+s.speakers+' '+s.location+' '+s.type).toLowerCase().includes(kw));
+  items=items.slice(0,60);
+  el.innerHTML=items.map((s,i)=>{
+    const idx=CATALOG.indexOf(s);
+    const dayTxt=s.day?s.day.slice(5).replace('-','/')+(s.start?' '+s.start+'–'+s.end:''):'時間待確認';
+    return '<div class="cat-item"><div class="info">'
+      +(s.code?'<span class="c">'+esc(s.code)+'</span> ':'')
+      +(s.delivery==='digital'?badge('b-dig','數位'):'')
+      +(s.enroll?badge('b-wait','需報名'):'')
+      +'<div class="t">'+esc(s.title)+'</div>'
+      +(s.titleEn?'<div class="title-en">'+esc(s.titleEn)+'</div>':'')
+      +'<div class="m">'+dayTxt+'　'+esc(s.location||'')+(s.speakers?'　'+esc(s.speakers):'')+'</div></div>'
+      +'<button class="btn small" onclick="addFromCat('+idx+')">＋加入</button></div>';
+  }).join('')||'<p class="hint">找不到。若課程庫還不完整,請先用抓取工具匯入完整清單。</p>';
+}
+function catToSession(s,priority){
+  return {id:uid(),code:s.code,title:s.title,titleEn:s.titleEn||'',day:s.day,start:s.start,end:s.end,location:s.location,
+    type:s.type,speakers:s.speakers,priority:priority||'alt',status:s.enroll?'未定':'未定',
+    replay:(s.replay||s.delivery==='digital')?'yes':'no',url:s.url,notes:''};
+}
+function addFromCat(i){
+  const s=CATALOG[i];if(!s)return;
+  if(data.some(d=>d.code&&s.code&&d.code===s.code&&d.day===s.day)){alert(s.code+' 已在課表中。');return;}
+  data.push(catToSession(s,'alt'));persist();render();
+  alert('已加入:'+(s.code||s.title));
+}
+function batchAdd(){
+  const txt=document.getElementById('codePaste').value;
+  const pr=document.getElementById('batchPriority').value;
+  const codes=[...new Set((txt.toUpperCase().match(/[A-Z]{2,5}\d{3,5}(?:-D)?/g)||[]))];
+  if(!codes.length){alert('沒有辨識到課程代碼。');return;}
+  const added=[],missed=[],dup=[];
+  codes.forEach(c=>{
+    if(data.some(d=>(d.code||'').toUpperCase()===c)){dup.push(c);return;}
+    const hit=CATALOG.filter(s=>s.code===c);
+    if(hit.length){hit.forEach(h=>data.push(catToSession(h,pr)));added.push(c);}
+    else{data.push({id:uid(),code:c,title:c+'(課程庫查無,請補時間)',type:'講座',day:'',start:'',end:'',
+      location:'',speakers:'',priority:pr,status:'未定',replay:'no',url:'',notes:'課程庫中找不到此代碼——請先用抓取工具更新課程庫,或手動填時間。'});
+      missed.push(c);}
+  });
+  persist();render();
+  alert('比對完成\n✅ 找到並加入:'+(added.join(', ')||'無')
+    +'\n⚠️ 庫中查無(已建占位):'+(missed.join(', ')||'無')
+    +'\n↩️ 已在課表跳過:'+(dup.join(', ')||'無'));
+  catDlg.close();
+}
+
+/* ---------- 我的課表 ---------- */
+function renderTabs(){
+  const el=document.getElementById('dayTabs');el.innerHTML='';
+  DAYS.forEach(d=>{
+    let n;
+    if(d.v==='all')n=data.length;
+    else if(d.v==='other')n=data.filter(s=>s.day&&!MAIN_DAYS.includes(s.day)).length;
+    else n=data.filter(s=>s.day===d.v).length;
+    const b=document.createElement('button');
+    b.innerHTML=d.label+'<span class="n">'+n+'</span>';
+    if(d.v===curDay)b.classList.add('on');
+    b.onclick=()=>{curDay=d.v;render();};
+    el.appendChild(b);
+  });
+}
+function inDay(s,v){
+  if(v==='all')return true;
+  if(v==='other')return s.day&&!MAIN_DAYS.includes(s.day);
+  return s.day===v;
+}
+function match(s){
+  if(!inDay(s,curDay))return false;
+  if(curFilters.has('star')&&s.priority!=='star')return false;
+  if(curFilters.has('lab')&&s.type!=='Hands-On Lab')return false;
+  if(curFilters.has('reg')&&s.status!=='已報名')return false;
+  if(curFilters.has('note')&&!(s.notes||'').trim())return false;
+  if(q){const t=(s.code+' '+s.title+' '+(s.speakers||'')+' '+(s.location||'')+' '+(s.notes||'')).toLowerCase();
+    if(!t.includes(q))return false;}
+  return true;
+}
+function overlap(a,b){return a.day&&a.day===b.day&&a.start&&a.end&&b.start&&b.end&&a.start<b.end&&b.start<a.end;}
+function conflictsOf(s){
+  return data.filter(o=>o.id!==s.id&&overlap(s,o)&&o.status!=='已完成'&&s.status!=='已完成'
+    &&(s.priority!=='none'||o.priority!=='none'||s.status==='已報名'||o.status==='已報名'));
+}
+function cardHTML(s){
+  const b=[];
+  if(s.priority==='star')b.push(badge('b-star','★必上'));
+  if(s.priority==='alt')b.push(badge('b-alt','○備選'));
+  if(s.type==='Hands-On Lab')b.push(badge('b-lab','Lab'));
+  if(s.status==='已報名')b.push(badge('b-reg','已報名'));
+  if(s.status==='候補中')b.push(badge('b-wait','候補中'));
+  if(s.status==='已完成')b.push(badge('b-done','✓已完成'));
+  if(s.replay==='yes')b.push(badge('b-replay','有Replay'));
+  const meta=[s.type,s.location,s.speakers].filter(Boolean).map(esc).join('　');
+  const conf=conflictsOf(s);
+  let h='<div class="slot">';
+  h+='<div class="time'+(s.start?'':' tbd')+'">'+(s.start?esc(s.start)+'<span class="end">'+esc(s.end||'')+'</span>':'時間<br>待確認')+'</div>';
+  h+='<div class="card p-'+s.priority+(s.status==='已完成'?' done':'')+'" onclick="openEditor(\''+s.id+'\')">';
+  h+='<div class="row1">'+(s.code?'<span class="code">'+esc(s.code)+'</span>':'')+b.join(' ')+'</div>';
+  h+='<h3>'+esc(s.title)+'</h3>';
+  if(s.titleEn)h+='<div class="title-en">'+esc(s.titleEn)+'</div>';
+  if(meta)h+='<div class="meta">'+meta+'</div>';
+  if((s.notes||'').trim())h+='<div class="note-preview">📝 '+esc(s.notes)+'</div>';
+  h+='</div></div>';
+  if(conf.length)h+='<div class="conflict">⚠ 時間衝突:'+conf.map(c=>esc(c.code||c.title)).join('、')
+    +'。原則:實體限定優先於有 Replay 的場次。</div>';
+  return h;
+}
+function render(){
+  renderTabs();
+  const list=document.getElementById('list');
+  const shown=data.filter(match);
+  if(!shown.length){list.innerHTML='<div class="empty">沒有符合的課程。<br>從「📚 課程庫」加入,或「＋新增」。</div>';return;}
+  const groups=curDay==='all'?DAYS.slice(1):DAYS.filter(d=>d.v===curDay);
+  let h='';
+  groups.forEach(d=>{
+    const items=shown.filter(s=>inDay(s,d.v)).sort((a,b)=>((a.day||'9999')+(a.start||'99'))<((b.day||'9999')+(b.start||'99'))?-1:1);
+    if(!items.length)return;
+    h+='<div class="daytitle"><b>'+d.label+'</b>'+(d.theme?'<span>'+d.theme+'</span>':'')
+      +(d.v===''?'<span>用課程庫比對即可自動帶入時間</span>':'')+'</div>';
+    items.forEach(s=>h+=cardHTML(s));
+  });
+  list.innerHTML=h||'<div class="empty">沒有符合的課程。</div>';
+}
+
+/* ---------- 編輯 ---------- */
+function openEditor(id){
+  const f=document.getElementById('form');f.reset();
+  const s=id?data.find(x=>x.id===id):null;
+  document.getElementById('dlgTitle').textContent=s?'編輯課程':'新增課程';
+  document.getElementById('delBtn').style.visibility=s?'visible':'hidden';
+  if(s)for(const k of ['code','title','type','day','start','end','location','speakers','priority','status','replay','url','notes','id'])
+    if(f[k]!==undefined)f[k].value=s[k]||'';
+  if(!s)f.id.value='';
+  dlg.showModal();
+}
+function saveSession(e){
+  const f=document.getElementById('form');const obj={};
+  ['code','title','type','day','start','end','location','speakers','priority','status','replay','url','notes']
+    .forEach(k=>obj[k]=(f[k].value||'').trim?f[k].value.trim():f[k].value);
+  const id=f.id.value;
+  if(id){const i=data.findIndex(x=>x.id===id);data[i]={...data[i],...obj};}
+  else{obj.id=uid();data.push(obj);}
+  persist();render();
+}
+function deleteSession(){
+  const id=document.getElementById('form').id.value;
+  if(id&&confirm('確定刪除這筆課程?')){data=data.filter(x=>x.id!==id);persist();dlg.close();render();}
+}
+
+/* ---------- 匯出 / 匯入 ---------- */
+function dl(name,content,type){
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));
+  a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+function exportJSON(){
+  dl('AU2026我的課表_'+new Date().toISOString().slice(0,10)+'.json',
+    JSON.stringify({exported:new Date().toISOString(),sessions:data},null,2),'application/json');
+}
+
+function parseCSV(text){
+  const rows=[];let row=[],cell='',quoted=false;
+  for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];
+    if(c==='"'&&quoted&&n==='"'){cell+='"';i++;}
+    else if(c==='"')quoted=!quoted;
+    else if(c===','&&!quoted){row.push(cell);cell='';}
+    else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&n==='\n')i++;row.push(cell);if(row.some(x=>x!==''))rows.push(row);row=[];cell='';}
+    else cell+=c;
+  }
+  row.push(cell);if(row.some(x=>x!==''))rows.push(row);
+  const head=rows.shift().map(x=>x.trim());
+  return rows.map(r=>Object.fromEntries(head.map((h,i)=>[h,(r[i]||'').trim()])));
+}
+function importScheduleCSV(ev){
+  const file=ev.target.files[0];if(!file)return;const reader=new FileReader();
+  reader.onload=()=>{try{
+    const rows=parseCSV(reader.result.replace(/^\uFEFF/,''));
+    if(!rows.length||!rows[0]['Session Code'])throw new Error('找不到 Session Code 欄位');
+    const imported=rows.map((r,i)=>{
+      const code=(r['Session Code']||'').toUpperCase();
+      const p=(r.Date||'').split('/');const day=p.length===3?p[0]+'-'+p[1].padStart(2,'0')+'-'+p[2].padStart(2,'0'):'';
+      const start=r['Start Time']||'';
+      const hit=CATALOG.find(s=>s.code===code&&s.day===day&&s.start===start)
+        ||CATALOG.find(s=>s.code===code&&s.day===day)||CATALOG.find(s=>s.code===code);
+      const raw=(r['Session Title']||code).replace(/^\(Favorited\)\s*/,'');
+      const manual={4523:'Forma Futures 啟動工作坊',4317:'亞太區歡迎交流餐會'};
+      return {id:'csv'+Date.now().toString(36)+i,code,title:hit?hit.title:(manual[code]||raw),titleEn:hit?(hit.titleEn||raw):raw,
+        day,start,end:r['End Time']||'',location:r.Room||(hit?hit.location:''),type:hit?hit.type:'課程',
+        speakers:hit?hit.speakers:'',priority:r.Status==='Scheduled'?'star':'alt',
+        status:r.Status==='Scheduled'?'已報名':'未定',replay:hit&&hit.replay?'yes':'no',
+        url:hit?hit.url:'',notes:'AU My Schedule：'+(r.Status||'')};
+    });
+    if(confirm('已讀取 '+imported.length+' 筆。按「確定」覆蓋目前課表；按「取消」則合併。'))data=imported;
+    else{const keys=new Set(data.map(s=>s.code+'|'+s.day+'|'+s.start));imported.forEach(s=>{const k=s.code+'|'+s.day+'|'+s.start;if(!keys.has(k)){data.push(s);keys.add(k);}});}
+    persist();render();alert('My Schedule 匯入完成，共 '+imported.length+' 筆。');
+  }catch(e){alert('CSV 匯入失敗：'+e.message);}
+  ev.target.value='';
+  };reader.readAsText(file);
+}
+
+function importJSON(ev){
+  const file=ev.target.files[0];if(!file)return;const r=new FileReader();
+  r.onload=()=>{try{
+    const j=JSON.parse(r.result);const arr=Array.isArray(j)?j:j.sessions;
+    if(!Array.isArray(arr))throw 0;
+    if(confirm('匯入 '+arr.length+' 筆。「確定」=覆蓋,「取消」=合併。'))data=arr;
+    else{const ids=new Set(data.map(s=>s.id));arr.forEach(s=>{if(!ids.has(s.id))data.push(s);});}
+    persist();render();alert('匯入完成。');
+  }catch(e){alert('檔案格式錯誤。');}};
+  r.readAsText(file);ev.target.value='';
+}
+function exportCSV(){
+  const head=['日期','開始','結束','代碼','名稱','類型','優先級','狀態','地點','講者','Replay','連結','筆記'];
+  const pr={star:'★必上',alt:'○備選',none:'一般'};
+  const rows=data.slice().sort((a,b)=>((a.day||'9999')+(a.start||''))<((b.day||'9999')+(b.start||''))?-1:1).map(s=>
+    [s.day,s.start,s.end,s.code,s.title,s.type,pr[s.priority]||'',s.status,s.location,s.speakers,
+     s.replay==='yes'?'有':'',s.url,(s.notes||'').replace(/\n/g,' ')]
+    .map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(','));
+  dl('AU2026我的課表.csv','\uFEFF'+head.join(',')+'\n'+rows.join('\n'),'text/csv;charset=utf-8');
+}
+
+/* ---------- 事件 ---------- */
+document.getElementById('q').addEventListener('input',e=>{q=e.target.value.trim().toLowerCase();render();});
+document.querySelectorAll('.toolbar .chip').forEach(c=>c.onclick=()=>{
+  const k=c.dataset.filter;curFilters.has(k)?curFilters.delete(k):curFilters.add(k);
+  c.classList.toggle('on');render();});
+persist();render();
+</script>
+</body>
+</html>
