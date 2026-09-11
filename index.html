@@ -1,0 +1,1100 @@
+# AU 2026 選課管理(GitHub Pages 版)
+
+個人專用的 AU 2026 課程管理網頁:離線可用、資料永久保留、會後仍可查詢與寫心得。
+
+## 檔案說明
+
+| 檔案 | 用途 |
+|---|---|
+| `index.html` | 選課管理 App 本體(單一檔案,免安裝) |
+| `catalog.json` | 課程庫:AU 官方目錄快照(App 開啟時自動載入) |
+| `catalog-scraper.js` | 抓取工具:在 AU 目錄頁的瀏覽器 Console 執行,下載完整 592+173 場清單 |
+
+## 上架 GitHub Pages(一次設定,5 分鐘)
+
+1. 登入 GitHub → 右上「＋」→ **New repository** → 名稱如 `au2026`,設 **Public** → Create。
+2. 在 repo 頁面點 **uploading an existing file**,把這三個檔案拖進去 → **Commit changes**。
+3. repo 的 **Settings → Pages** → Branch 選 `main`、資料夾 `/ (root)` → **Save**。
+4. 約 1 分鐘後,妳的網址就是:`https://<妳的帳號>.github.io/au2026/`
+   手機、平板、電腦打開都能用,加到主畫面就像 App。
+
+## 更新完整課程庫(出發前做一次)
+
+1. 電腦瀏覽器開 AU 實體目錄:
+   `https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson`
+2. 按 **F12** → **Console**,整份貼上 `catalog-scraper.js` 內容,Enter。
+3. 腳本自動點完所有「Show more」(約 1–3 分鐘),完成後下載 `au2026-inperson.json`。
+4. 到數位目錄頁重複一次,得到 `au2026-digital.json`。
+5. 在 App 內按「📚 課程庫 → 匯入課程庫 JSON」把兩個檔各匯入一次(自動合併去重);
+   或把 JSON 丟給 Claude 合併成新的 `catalog.json` 再上傳到 repo。
+
+## 日常使用
+
+- **貼課單**:「📚 課程庫」→ 貼上妳的課程代碼清單 → 批次比對,自動帶入時間/教室/講者。
+- **衝堂**:同日時段重疊自動亮紅字;原則是實體限定優先於有 Replay 的場次。
+- **現場**:點課程卡 → 改狀態「已完成」、寫心得筆記。
+- **備份**:「匯出我的課表 JSON」存雲端;換裝置匯入即可。CSV 可用 Excel 開。
+
+## 注意
+
+- 課表資料存在「該瀏覽器」的 localStorage;GitHub 上的 `catalog.json` 是共用課程庫,
+  妳的個人課表**不會**自動上傳到 GitHub(隱私安全)。要跨裝置同步,用匯出/匯入 JSON。
+- AU 正式時間以官方 My Schedule 為準;目錄快照時間如有異動請以現場公告為準。
+
+{
+ "event": "AU 2026",
+ "updated": "2026-09-11T03:43:14.280Z",
+ "counts": {
+  "inperson_total": 592,
+  "digital_total": 173,
+  "captured": 39
+ },
+ "sessions": [
+  {
+   "code": "KEY1001",
+   "title": "Day 1 Keynote (Andrew Anagnost, Raji Arasu, Clara Shih)",
+   "day": "2026-09-15",
+   "start": "09:00",
+   "end": "10:30",
+   "location": "Venetian, Expo Hall B, level 2",
+   "type": "Keynote",
+   "speakers": "Andrew Anagnost; Raji Arasu; Clara Shih",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1783353805743001ifWb",
+   "delivery": "inperson",
+   "enroll": true
+  },
+  {
+   "code": "5001",
+   "title": "Breakfast 早餐",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "08:00",
+   "location": "Venetian, Hall G, level 1",
+   "type": "餐飲",
+   "speakers": "",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1783353804660001iJth",
+   "delivery": "inperson"
+  },
+  {
+   "code": "5038",
+   "title": "Expo 展區",
+   "day": "2026-09-15",
+   "start": "10:30",
+   "end": "18:30",
+   "location": "Venetian, Expo Hall C, level 2",
+   "type": "活動",
+   "speakers": "",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1783353809521001iMLi",
+   "delivery": "inperson"
+  },
+  {
+   "code": "5028",
+   "title": "AU Clubhouse",
+   "day": "2026-09-15",
+   "start": "10:30",
+   "end": "18:30",
+   "location": "Venetian, Expo Hall C Foyer, level 2",
+   "type": "活動",
+   "speakers": "",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1783353808455001iVeL",
+   "delivery": "inperson"
+  },
+  {
+   "code": "5062",
+   "title": "Braindate 交流配對",
+   "day": "2026-09-15",
+   "start": "11:00",
+   "end": "18:30",
+   "location": "Venetian, Expo Hall C - Braindate Lounge",
+   "type": "交流",
+   "speakers": "",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1783372449744001on2b",
+   "delivery": "inperson"
+  },
+  {
+   "code": "5034",
+   "title": "AU Merch Store",
+   "day": "2026-09-14",
+   "start": "13:00",
+   "end": "17:00",
+   "location": "Venetian, Hall G Foyer, level 1",
+   "type": "活動",
+   "speakers": "",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1783353809099001iAkK",
+   "delivery": "inperson"
+  },
+  {
+   "code": "POD4898",
+   "title": "Digital Transformation Is a Race Without a Finish Line",
+   "day": "2026-09-15",
+   "start": "10:30",
+   "end": "11:15",
+   "location": "Podcast Stage",
+   "type": "Strategy Talk",
+   "speakers": "Olli Hyyppa (Arcadis)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1788381117518001zMWV",
+   "delivery": "inperson"
+  },
+  {
+   "code": "CS4619",
+   "title": "AI-Ready Workstations for AEC",
+   "day": "2026-09-15",
+   "start": "11:00",
+   "end": "11:30",
+   "location": "Venetian, San Polo 3403, level 3",
+   "type": "Strategy Talk",
+   "speakers": "Rob Jamieson (AMD); Stephanie Berger (HP)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1783711570067001eZQr",
+   "delivery": "inperson"
+  },
+  {
+   "code": "AS4753",
+   "title": "More Performance, Less Power: Workstation Cost",
+   "day": "2026-09-15",
+   "start": "11:00",
+   "end": "12:00",
+   "location": "Venetian, Venetian Expo 101, level 1",
+   "type": "Lunch & Learn",
+   "speakers": "Daniel Stine (Lake Flato); Trey Morton (Dell)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1786141567197001iLZF",
+   "delivery": "inperson"
+  },
+  {
+   "code": "MFG2231",
+   "title": "PLM Summit | Welcome (Srinath Jonnalagadda)",
+   "day": "2026-09-15",
+   "start": "11:00",
+   "end": "11:30",
+   "location": "Venetian, Titian 2203, level 2",
+   "type": "Strategy Talk",
+   "speakers": "Srinath Jonnalagadda (Autodesk)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775253794749001wUpK",
+   "delivery": "inperson"
+  },
+  {
+   "code": "AS4665",
+   "title": "The Hidden Cost of Information Silos",
+   "day": "2026-09-15",
+   "start": "11:00",
+   "end": "11:20",
+   "location": "Solutions Spotlight Theater",
+   "type": "Strategy Talk",
+   "speakers": "Carl Veillette; David Wagner (Newforma)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1784663480568001S1Gx",
+   "delivery": "inperson"
+  },
+  {
+   "code": "POD4899",
+   "title": "Rethinking the Construction Workforce",
+   "day": "2026-09-15",
+   "start": "11:15",
+   "end": "12:00",
+   "location": "Podcast Stage",
+   "type": "Strategy Talk",
+   "speakers": "Brad Buckles (CPPI); Mallorie Brodie (Bridgit)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1788381118006001zXBF",
+   "delivery": "inperson"
+  },
+  {
+   "code": "CS4485",
+   "title": "Smarter Asset Strategy for Data Center Delivery (Forma)",
+   "day": "2026-09-15",
+   "start": "11:30",
+   "end": "12:30",
+   "location": "Stage 02",
+   "type": "Strategy Talk",
+   "speakers": "Matthew Harraka; Bobby Hinojosa (ARKANCE)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1781722817989001uRNW",
+   "delivery": "inperson"
+  },
+  {
+   "code": "AU2207",
+   "title": "AU Newbies Meetup 新手見面會",
+   "day": "2026-09-15",
+   "start": "11:30",
+   "end": "12:30",
+   "location": "Venetian, Bellini 2105-2106, level 2",
+   "type": "Meetup",
+   "speakers": "Todd Rogers; Chris Benner",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775244264746001Aw0K",
+   "delivery": "inperson"
+  },
+  {
+   "code": "AU3696",
+   "title": "Autodesk Asian & Latinx Network Meetup",
+   "day": "2026-09-15",
+   "start": "11:30",
+   "end": "12:30",
+   "location": "Venetian, Bellini 2103-2104, level 2",
+   "type": "Meetup",
+   "speakers": "Curt Chan (Autodesk)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1775593216129001fNdl",
+   "delivery": "inperson"
+  },
+  {
+   "code": "CES1026",
+   "title": "Forma Site Design for Infrastructure",
+   "day": "2026-09-15",
+   "start": "11:30",
+   "end": "12:00",
+   "location": "Venetian, Veronese 2504, level 2",
+   "type": "Technical Deep Dive",
+   "speakers": "Shelby L Smith (Bohler); Hilde Bakkeli (Autodesk)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1773148305139001NVwm",
+   "delivery": "inperson"
+  },
+  {
+   "code": "BLD1522",
+   "title": "Autodesk Tandem Connect in Action (Hands-on Lab)",
+   "day": "2026-09-15",
+   "start": "11:30",
+   "end": "13:00",
+   "location": "Venetian, Marco Polo 805, level 1",
+   "type": "Hands-On Lab",
+   "speakers": "Derek Milz (Autodesk)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1774533304653001z1wt",
+   "delivery": "inperson",
+   "enroll": true,
+   "note": "另一場 9/16 11:00"
+  },
+  {
+   "code": "BLD4610",
+   "title": "Building Operational Twins with Indoor GIS (Esri)",
+   "day": "2026-09-15",
+   "start": "11:30",
+   "end": "12:30",
+   "location": "Venetian, San Polo 3401B, level 3",
+   "type": "Technical Deep Dive",
+   "speakers": "Gokce Ozcelik; Michael Davidson; William Isley (Esri)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1783626335550001zdQv",
+   "delivery": "inperson"
+  },
+  {
+   "code": "CS1239",
+   "title": "Connected Coordination L3: Clash Resolution in Forma (Lab)",
+   "day": "2026-09-15",
+   "start": "11:30",
+   "end": "13:00",
+   "location": "Venetian, Galileo 905, level 1",
+   "type": "Hands-On Lab",
+   "speakers": "Deepak Maini (Autodesk)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson/session/1773808610493001O7g8",
+   "delivery": "inperson",
+   "enroll": true,
+   "note": "另一場 9/16 14:00"
+  },
+  {
+   "code": "CS3038-D",
+   "title": "Agentic AI for AEC: Orchestrating Autonomous Project Delivery",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Technical Deep Dive",
+   "speakers": "Irene Won (Anthropic); Adam Sheather (Autodesk)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105126336001PpfR",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "AU4258-D",
+   "title": "AI-Connected Workflows: Fusion, Claude, and MCP 101",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Technical Deep Dive",
+   "speakers": "Luke Mihelcic (Autodesk)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105148140001Pi4i",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "BES1631-D",
+   "title": "Boosting Autodesk Development Using AI with AutoLISP and C# .NET",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "06:30",
+   "location": "Digital 線上",
+   "type": "Strategy Talk",
+   "speakers": "Todd Schmoock (Graitec); James Johnson (Synergis)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105096869001PcRP",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "BES1547-D",
+   "title": "Agentic AI Running Project Workflows in Forma with MCP",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Technical Deep Dive",
+   "speakers": "Farzad Towhidi (Autodesk); Luis Salmeron (PEC)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105092955001PXJZ",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "BES4067-D",
+   "title": "Agents of Change: Agentic AI and MCP Workflows for AEC Firms",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Strategy Talk",
+   "speakers": "Michael Gustafson (QNECT); Andrew Sundal (HGA)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105142483001PUlQ",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "BLD2712-D",
+   "title": "AI Agents Meet APS: Forma Building Design to Digital Twin",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Strategy Talk",
+   "speakers": "Frank Otto (N+P)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105120814001PDMS",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "AS1652-D",
+   "title": "Beyond Dynamo: AI-built APS Automations, 100+ Revit Models in 10 min",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Technical Deep Dive",
+   "speakers": "Olga Kerkhanidi (AECOM)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105097991001PG08",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "BES1245-D",
+   "title": "A.I. Without Chaos: AutoCAD/Revit Plugin Dev with Spec-Driven Development",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Technical Deep Dive",
+   "speakers": "Fernando Malard (ofcdesk)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105090003001PdBx",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "BES2251-D",
+   "title": "AI for Ideation: Generative AI and APS",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Technical Deep Dive",
+   "speakers": "Andrell Laniewicz; Zachary Smith (HDR)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105112530001P9jD",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "CES3138-D",
+   "title": "AI Data Check for Civil 3D via APS",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Technical Deep Dive",
+   "speakers": "Mohamad Kassir (Egis)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105129097001PVyz",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "LS2969-D",
+   "title": "AI Data Ready: Design to Construction to Operations",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Technical Deep Dive",
+   "speakers": "Gilbert Kwan; Stacy Goins; Victor Strausbaugh (Amgen)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105124646001P35H",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "BES3590-D",
+   "title": "APS GraphQL in Production",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "06:30",
+   "location": "Digital 線上",
+   "type": "Technical Deep Dive",
+   "speakers": "Kevin Vandecar (Autodesk)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105135683001P6gX",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "BES3266-D",
+   "title": "AI Changes the Cost Curve, Connected Data Changes Value",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "06:30",
+   "location": "Digital 線上",
+   "type": "Strategy Talk",
+   "speakers": "Knut Ramstad; Marius Jablonskis (Norconsult)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105129651001P9u0",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "AS3393-D",
+   "title": "Agentic Design Exploration: LA28 and Autodesk",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Strategy Talk",
+   "speakers": "Arthur Harsuvanakit (Autodesk)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105132417001PTZE",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "CS3291-D",
+   "title": "Agentic Future: Forma, Informed Design and KOPE",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Strategy Talk",
+   "speakers": "David Flynn (KOPE)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105130764001PobL",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "CES3922-D",
+   "title": "Drainage Design Best Practices: InfoDrainage and Civil 3D",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Technical Deep Dive",
+   "speakers": "Hunter Sparks (Autodesk)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105141351001PiIJ",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "MFG1914-D",
+   "title": "Top 10 Hidden Productivity Tools in AutoCAD Mechanical",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Technical Deep Dive",
+   "speakers": "Sridhar Subramani (Autodesk)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105103005001PLwX",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "CP1340-D",
+   "title": "Beyond Automation: AI Collaboration with Autodesk Assistant",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Technical Deep Dive",
+   "speakers": "Alex Lobos (RIT)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105091155001P4cL",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "CP2848-D",
+   "title": "Beyond the BOM: PLM for Modern Product Management",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "06:30",
+   "location": "Digital 線上",
+   "type": "Strategy Talk",
+   "speakers": "Gus Quade (Autodesk)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105123551001PNXI",
+   "delivery": "digital",
+   "replay": true
+  },
+  {
+   "code": "TR1675-D",
+   "title": "Autodesk VRED: Real-Time Visualization + AI",
+   "day": "2026-09-15",
+   "start": "06:00",
+   "end": "07:00",
+   "location": "Digital 線上",
+   "type": "Technical Deep Dive",
+   "speakers": "Victor Perez; Pascal Seifert (Autodesk)",
+   "url": "https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/digital/session/1783105099137001PeBS",
+   "delivery": "digital",
+   "replay": true
+  }
+ ]
+}
+/* ============================================================
+   AU 2026 目錄抓取工具(在瀏覽器 Console 執行)
+   使用方式:
+   1. 用電腦瀏覽器開啟 AU 課程目錄頁(實體或數位皆可):
+      https://conferences.autodesk.com/flow/autodesk/au2026/sessioncatalog/page/inperson
+   2. 按 F12 → Console 分頁
+   3. 整份貼上這個檔案的內容,按 Enter
+   4. 腳本會自動一直點「Show more」直到載完全部課程(592 場約 1-3 分鐘)
+   5. 完成後自動下載 au2026-inperson.json(數位頁則是 au2026-digital.json)
+   6. 兩個 JSON 都抓完後,上傳到 GitHub repo(或丟給 Claude 合併成 catalog.json)
+   注意:此工具只讀取妳眼前已公開顯示的網頁內容,不碰帳號與報名功能。
+   ============================================================ */
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const isDigital = location.pathname.includes('/digital');
+  console.log('%cAU2026 抓取開始… 頁面類型: ' + (isDigital ? 'digital' : 'inperson'), 'color:#1F3FBF;font-weight:bold');
+
+  // 1) 自動點 Show more 直到全部載入
+  let clicks = 0, guard = 0;
+  while (guard++ < 300) {
+    const btn = [...document.querySelectorAll('button, a, span[role="button"], div[role="button"]')]
+      .find(el => /show\s*more/i.test(el.textContent || '') && el.offsetParent !== null);
+    if (!btn) break;
+    btn.scrollIntoView({ block: 'center' });
+    btn.click();
+    clicks++;
+    if (clicks % 5 === 0) console.log('已點 Show more ' + clicks + ' 次,持續載入…');
+    await sleep(1400); // 等待 API 回應;若網速慢可把 1400 改成 2500
+  }
+  console.log('載入完成(共點 ' + clicks + ' 次),開始解析…');
+  await sleep(1000);
+
+  // 2) 解析所有課程卡片
+  const DAY = { 'Sep 14': '2026-09-14', 'Sep 15': '2026-09-15', 'Sep 16': '2026-09-16',
+                'Sep 17': '2026-09-17', 'Sep 18': '2026-09-18', 'Sep 22': '2026-09-22', 'Sep 23': '2026-09-23' };
+  const to24 = t => {
+    const m = t.match(/(\d{1,2}):(\d{2})\s*([AP]M)/i); if (!m) return '';
+    let h = +m[1]; if (/PM/i.test(m[3]) && h !== 12) h += 12; if (/AM/i.test(m[3]) && h === 12) h = 0;
+    return String(h).padStart(2, '0') + ':' + m[2];
+  };
+  const seen = {}, out = [];
+  document.querySelectorAll('a[href*="/session/"]').forEach(a => {
+    const url = a.href.split('?')[0];
+    const label = (a.textContent || '').trim();
+    if (!label || seen[url + '|' + label]) return;
+    // 卡片容器:往上找含時間資訊的祖先
+    let card = a, hop = 0;
+    while (card.parentElement && hop++ < 8) {
+      card = card.parentElement;
+      if (/\d{1,2}:\d{2}\s*[AP]M\s*-\s*\d{1,2}:\d{2}\s*[AP]M/.test(card.innerText || '')) break;
+    }
+    const txt = card.innerText || '';
+    // 代碼|標題
+    let code = '', title = label;
+    const mt = label.match(/^([A-Z]{2,5}\d{3,5}(?:-D)?|\d{4,5})\s*\|\s*(.+)$/);
+    if (mt) { code = mt[1]; title = mt[2].trim(); }
+    // 日期時間: "Tuesday, Sep 15 11:30 AM - 1:00 PM PDT"
+    const md = txt.match(/(?:Mon|Tues|Wednes|Thurs|Fri)day,\s*(Sep\s*\d{1,2})\s*(\d{1,2}:\d{2}\s*[AP]M)\s*-\s*(\d{1,2}:\d{2}\s*[AP]M)\s*(?:PDT|PT)?/);
+    const day = md ? (DAY[md[1].replace(/\s+/g, ' ')] || '') : '';
+    // 地點:時間後同段文字
+    let locn = '';
+    if (md) {
+      const after = txt.slice(txt.indexOf(md[0]) + md[0].length);
+      locn = (after.split('\n').map(s => s.trim()).find(s => s && !/^\(/.test(s) && s.length < 90) || '').replace(/\(.*GMT.*\)/, '').trim();
+    }
+    // 類型
+    const type = /hands-?on lab/i.test(txt) ? 'Hands-On Lab'
+               : /keynote/i.test(txt) ? 'Keynote'
+               : /meetup/i.test(txt) ? 'Meetup'
+               : /technical deep dive/i.test(txt) ? 'Technical Deep Dive'
+               : /strategy talk/i.test(txt) ? 'Strategy Talk'
+               : /meal|breakfast|lunch(?!\s*&)/i.test(txt) ? '餐飲' : '講座';
+    const enroll = /enrollment required/i.test(txt);
+    // 講者:", 職稱, 公司" 前一行的人名很難精準抓,退而求其次抓 ", " 模式
+    const sp = [...new Set((txt.match(/^[A-Z][\w.'-]+(?:\s[A-Z][\w.'-]+){0,3}\n,\s.+$/gm) || [])
+      .map(s => s.split('\n')[0].trim()))].slice(0, 6).join('; ');
+    seen[url + '|' + label] = 1;
+    out.push({ code, title, day, start: md ? to24(md[2]) : '', end: md ? to24(md[3]) : '',
+               location: locn, type, speakers: sp, url, delivery: isDigital ? 'digital' : 'inperson',
+               enroll, replay: isDigital || undefined });
+  });
+
+  // 3) 下載 JSON
+  const fname = 'au2026-' + (isDigital ? 'digital' : 'inperson') + '.json';
+  const blob = new Blob([JSON.stringify({ event: 'AU 2026', scraped: new Date().toISOString(),
+    page: isDigital ? 'digital' : 'inperson', count: out.length, sessions: out }, null, 1)],
+    { type: 'application/json' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob); link.download = fname; link.click();
+  console.log('%c完成!共抓到 ' + out.length + ' 場,已下載 ' + fname, 'color:#2E6B3F;font-weight:bold');
+  console.log('把這個 JSON 用選課管理 App 的「匯入課程庫」載入,或上傳到 GitHub repo。');
+})();
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>AU 2026 選課管理 · 9/15–17 Las Vegas</title>
+<style>
+  :root{
+    --paper:#F2F3EF; --ink:#15181C; --muted:#666D76; --line:#D8DAD4;
+    --cobalt:#1F3FBF; --cobalt-soft:#E4E9FB; --amber:#B97A0A; --amber-soft:#FBEFD8;
+    --alert:#B33A1E; --alert-soft:#F9E4DC; --ok:#2E6B3F; --ok-soft:#E1EFE4;
+    --card:#FFFFFF; --radius:10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,sans-serif;
+    background:var(--paper);color:var(--ink);font-size:15px;line-height:1.55;padding-bottom:92px;}
+  header{background:var(--ink);color:#F5F5F2;padding:18px 16px 14px;}
+  header h1{font-size:20px;font-weight:700;letter-spacing:.02em}
+  header .sub{font-size:12.5px;color:#B9BDC4;margin-top:2px}
+  header .sub b{color:#F0C468;font-weight:600}
+  nav.days{display:flex;gap:6px;overflow-x:auto;background:var(--ink);padding:0 12px 12px;position:sticky;top:0;z-index:20;}
+  nav.days button{flex:0 0 auto;border:1px solid #3A3F47;background:transparent;color:#C8CCD2;
+    padding:7px 13px;border-radius:999px;font-size:13.5px;cursor:pointer;font-family:inherit;}
+  nav.days button.on{background:#F5F5F2;color:var(--ink);border-color:#F5F5F2;font-weight:700}
+  nav.days button .n{font-size:11px;opacity:.75;margin-left:3px}
+  .toolbar{padding:12px 14px 4px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;max-width:760px;margin:0 auto}
+  .toolbar input[type=search]{flex:1 1 160px;min-width:140px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:14px;background:var(--card);font-family:inherit;}
+  .chip{border:1px solid var(--line);background:var(--card);color:var(--muted);
+    padding:6px 11px;border-radius:999px;font-size:12.5px;cursor:pointer;font-family:inherit;}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  main{padding:8px 14px 20px;max-width:760px;margin:0 auto}
+  .daytitle{margin:16px 2px 8px;font-size:13px;color:var(--muted);display:flex;align-items:baseline;gap:8px;}
+  .daytitle b{font-size:15px;color:var(--ink)}
+  .slot{display:grid;grid-template-columns:56px 1fr;gap:0 10px;margin-bottom:10px}
+  .slot .time{font-variant-numeric:tabular-nums;text-align:right;padding-top:12px;font-size:13px;color:var(--ink);font-weight:600;line-height:1.35;}
+  .slot .time .end{display:block;color:var(--muted);font-weight:400;font-size:12px}
+  .slot .time.tbd{color:var(--amber);font-size:12px;font-weight:700}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:11px 13px;cursor:pointer;border-left:4px solid var(--line);}
+  .card.p-star{border-left-color:var(--amber)}
+  .card.p-alt{border-left-color:var(--cobalt)}
+  .card.done{opacity:.72}
+  .card .row1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .card .code{font-size:12.5px;font-weight:700;color:var(--cobalt);letter-spacing:.03em}
+  .card h3{font-size:15px;font-weight:600;margin-top:2px}
+  .card .meta{margin-top:5px;font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 10px}
+  .badge{display:inline-block;font-size:11.5px;padding:1.5px 8px;border-radius:999px;font-weight:600}
+  .b-star{background:var(--amber-soft);color:var(--amber)}
+  .b-alt{background:var(--cobalt-soft);color:var(--cobalt)}
+  .b-lab{background:#EFE4F6;color:#6B3A93}
+  .b-reg{background:var(--ok-soft);color:var(--ok)}
+  .b-wait{background:var(--alert-soft);color:var(--alert)}
+  .b-done{background:#E4E5E2;color:#555}
+  .b-replay{background:#E2EFF2;color:#20606B}
+  .b-dig{background:#EDEEF0;color:#555}
+  .conflict{background:var(--alert-soft);border:1px solid #E2B4A4;color:var(--alert);
+    font-size:12.5px;border-radius:8px;padding:6px 10px;margin:2px 0 8px 66px;font-weight:600;}
+  .note-preview{margin-top:6px;font-size:12.5px;color:#4C5158;background:#F6F6F2;border-radius:6px;padding:5px 9px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .empty{color:var(--muted);text-align:center;padding:36px 10px;font-size:14px}
+  .bottombar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(242,243,239,.96);
+    border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+    display:flex;gap:8px;justify-content:center;}
+  .btn{font-family:inherit;font-size:14px;padding:9px 16px;border-radius:8px;cursor:pointer;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);}
+  .btn.primary{background:var(--cobalt);border-color:var(--cobalt);color:#fff;font-weight:700}
+  .btn.small{font-size:12.5px;padding:6px 11px}
+  .btn.danger{color:var(--alert);border-color:#E2B4A4}
+  dialog{border:none;border-radius:14px;max-width:600px;width:calc(100% - 28px);padding:0;margin:auto;max-height:88vh;}
+  dialog::backdrop{background:rgba(20,22,26,.5)}
+  .dlg-head{padding:15px 18px 0;display:flex;justify-content:space-between;align-items:center}
+  .dlg-head h2{font-size:17px}
+  .dlg-body{padding:12px 18px 18px;display:grid;gap:10px}
+  label.f{display:grid;gap:4px;font-size:12.5px;color:var(--muted);font-weight:600}
+  label.f input,label.f select,label.f textarea{font-family:inherit;font-size:14.5px;padding:8px 10px;
+    border:1px solid var(--line);border-radius:8px;background:#FCFCFA;color:var(--ink);}
+  label.f textarea{min-height:70px;resize:vertical}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .dlg-actions{display:flex;gap:8px;justify-content:space-between;padding-top:4px}
+  .dlg-actions .right{display:flex;gap:8px}
+  .cat-item{border:1px solid var(--line);border-radius:8px;padding:9px 11px;display:flex;gap:10px;align-items:flex-start;background:#FCFCFA}
+  .cat-item .info{flex:1;min-width:0}
+  .cat-item .c{font-size:12px;font-weight:700;color:var(--cobalt)}
+  .cat-item .t{font-size:13.5px;font-weight:600}
+  .cat-item .m{font-size:12px;color:var(--muted);margin-top:2px}
+  #catList{display:grid;gap:8px;max-height:38vh;overflow-y:auto}
+  .hint{font-size:12px;color:var(--muted)}
+  .datablock{padding:14px;border-top:1px dashed var(--line);margin-top:20px;max-width:760px;margin-left:auto;margin-right:auto}
+  .datablock h4{font-size:13.5px;margin-bottom:6px}
+  .datablock p{font-size:12.5px;color:var(--muted);margin-bottom:8px}
+  .datablock .btns{display:flex;flex-wrap:wrap;gap:8px}
+  @media print{header,nav.days,.toolbar,.bottombar,.datablock{display:none}
+    body{background:#fff;padding:0}.card{break-inside:avoid;cursor:default}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AU 2026 選課管理</h1>
+  <div class="sub">9月15–17日 · The Venetian, Las Vegas · <b>★必上</b> / ○備選 · 資料存本機,會後永久保留 · <span id="catStat">課程庫載入中…</span></div>
+</header>
+
+<nav class="days" id="dayTabs"></nav>
+
+<div class="toolbar">
+  <input type="search" id="q" placeholder="搜尋我的課表:代碼、名稱、講者、地點…">
+  <button class="chip" data-filter="star">★必上</button>
+  <button class="chip" data-filter="lab">Lab</button>
+  <button class="chip" data-filter="reg">已報名</button>
+  <button class="chip" data-filter="note">有筆記</button>
+</div>
+
+<main id="list"></main>
+
+<div class="datablock">
+  <h4>資料保存與備份</h4>
+  <p>課表與筆記自動存在此瀏覽器。放上 GitHub Pages 後,任何裝置開啟網址即可用;換裝置請先匯出 JSON 再匯入。</p>
+  <div class="btns">
+    <button class="btn small" onclick="exportJSON()">匯出我的課表 JSON</button>
+    <button class="btn small" onclick="document.getElementById('importFile').click()">匯入課表 JSON</button>
+    <button class="btn small" onclick="exportCSV()">匯出 CSV(Excel)</button>
+    <button class="btn small" onclick="window.print()">列印 / 存 PDF</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
+  </div>
+</div>
+
+<div class="bottombar">
+  <button class="btn" onclick="openCatalog()">📚 課程庫</button>
+  <button class="btn primary" onclick="openEditor()">＋ 新增</button>
+</div>
+
+<!-- 編輯課程 -->
+<dialog id="dlg">
+  <div class="dlg-head"><h2 id="dlgTitle">新增課程</h2><button class="btn small" onclick="dlg.close()">關閉</button></div>
+  <form class="dlg-body" id="form" method="dialog" onsubmit="saveSession(event)">
+    <div class="grid2">
+      <label class="f">課程代碼<input name="code" placeholder="例:AS2564"></label>
+      <label class="f">類型
+        <select name="type"><option>講座</option><option>Hands-On Lab</option><option>Keynote</option>
+        <option>Technical Deep Dive</option><option>Strategy Talk</option><option>Meetup</option>
+        <option>Expo / 攤位</option><option>社交 / 餐敘</option><option>餐飲</option><option>其他</option></select>
+      </label>
+    </div>
+    <label class="f">課程名稱 *<input name="title" required></label>
+    <div class="grid3">
+      <label class="f">日期
+        <select name="day"><option value="">未排定 / 待確認</option><option value="2026-09-14">9/14(一)</option>
+        <option value="2026-09-15">9/15(二)</option><option value="2026-09-16">9/16(三)</option>
+        <option value="2026-09-17">9/17(四)</option><option value="2026-09-18">9/18(五)</option></select>
+      </label>
+      <label class="f">開始<input name="start" type="time"></label>
+      <label class="f">結束<input name="end" type="time"></label>
+    </div>
+    <div class="grid2">
+      <label class="f">地點<input name="location"></label>
+      <label class="f">講者<input name="speakers"></label>
+    </div>
+    <div class="grid3">
+      <label class="f">優先級
+        <select name="priority"><option value="star">★ 必上</option><option value="alt">○ 備選</option><option value="none">一般</option></select>
+      </label>
+      <label class="f">狀態
+        <select name="status"><option>未定</option><option>已報名</option><option>候補中</option><option>已完成</option></select>
+      </label>
+      <label class="f">Digital Replay
+        <select name="replay"><option value="no">無 / 未知</option><option value="yes">有錄影重播</option></select>
+      </label>
+    </div>
+    <label class="f">課程頁連結<input name="url" placeholder="https://…(自動帶入)"></label>
+    <label class="f">筆記(行前準備、現場心得、Replay 連結…)<textarea name="notes"></textarea></label>
+    <input type="hidden" name="id">
+    <div class="dlg-actions">
+      <button type="button" class="btn danger" id="delBtn" onclick="deleteSession()">刪除</button>
+      <div class="right"><button type="button" class="btn" onclick="dlg.close()">取消</button>
+      <button type="submit" class="btn primary">儲存</button></div>
+    </div>
+  </form>
+</dialog>
+
+<!-- 課程庫 -->
+<dialog id="catDlg">
+  <div class="dlg-head"><h2>課程庫 <span class="hint" id="catCount"></span></h2>
+    <button class="btn small" onclick="catDlg.close()">關閉</button></div>
+  <div class="dlg-body">
+    <label class="f">貼上妳的課單(可整段貼,自動辨識課程代碼)
+      <textarea id="codePaste" placeholder="例:BLD1782, AS2564 AS1719&#10;CS3038-D…"></textarea>
+    </label>
+    <div class="grid2">
+      <label class="f">加入為
+        <select id="batchPriority"><option value="star">★ 必上</option><option value="alt">○ 備選</option></select>
+      </label>
+      <button class="btn primary" style="align-self:end" onclick="batchAdd()">批次比對並加入課表</button>
+    </div>
+    <label class="f">搜尋課程庫<input type="search" id="catQ" placeholder="代碼、關鍵字、講者…" oninput="renderCat()"></label>
+    <div id="catList"></div>
+    <div class="btns" style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn small" onclick="document.getElementById('catFile').click()">匯入課程庫 JSON(抓取工具產出)</button>
+      <input type="file" id="catFile" accept=".json" style="display:none" onchange="importCatalog(event)">
+    </div>
+    <p class="hint">課程庫 = AU 官方目錄快照(實體 592 + 數位 173 場)。用 catalog-scraper.js 在 AU 目錄頁抓完整清單後匯入,或放在 GitHub 同目錄的 catalog.json 會自動載入。</p>
+  </div>
+</dialog>
+
+<script>
+const KEY='au2026-sessions-v1', CATKEY='au2026-catalog-v1';
+const DAYS=[
+  {v:'all',label:'全部'},
+  {v:'2026-09-15',label:'9/15 二',theme:'AI 策略 × Keynote'},
+  {v:'2026-09-16',label:'9/16 三',theme:'技術自動化 × MCP 實作'},
+  {v:'2026-09-17',label:'9/17 四',theme:'大地/營建應用 × 變革領導'},
+  {v:'other',label:'其他日'},
+  {v:'',label:'未排定'}
+];
+const MAIN_DAYS=['2026-09-15','2026-09-16','2026-09-17'];
+
+const SEED=[
+ {id:'s1',code:'BLD1782',title:'Revit Public MCP Server Lab',type:'Hands-On Lab',day:'',start:'',end:'',location:'',speakers:'',priority:'star',status:'候補中',replay:'no',url:'',
+  notes:'三源一致必上。名額已滿——立即登入 AU 帳號加入候補!時間請用課程庫比對或在 My Schedule 核對。'},
+ {id:'s2',code:'AS2564',title:'MCP + Dynamo + pyRevit Automation',type:'講座',day:'',start:'',end:'',location:'',speakers:'',priority:'star',status:'未定',replay:'no',url:'',
+  notes:'三源一致必上。時間待從課程庫帶入。'},
+ {id:'s3',code:'AS1719',title:'AI Adoption Plan Lab',type:'Hands-On Lab',day:'',start:'',end:'',location:'',speakers:'',priority:'star',status:'未定',replay:'no',url:'',
+  notes:'三源一致必上。Hands-On Lab 需確認預先報名。'},
+ {id:'s4',code:'',title:'Hell’s Kitchen 晚餐(Caesars Palace)',type:'社交 / 餐敘',day:'2026-09-15',start:'19:00',end:'21:00',location:'Caesars Palace',speakers:'',priority:'star',status:'已報名',replay:'no',url:'',
+  notes:'OpenTable 已訂。推薦:HK Signature Prix Fixe、Beef Wellington、Sticky Toffee Pudding。'}
+];
+
+let data=load(), CATALOG=[], curDay='all', curFilters=new Set(), q='';
+const dlg=document.getElementById('dlg'), catDlg=document.getElementById('catDlg');
+
+function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}return SEED.map(s=>({...s}));}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){alert('儲存失敗:請立即匯出 JSON 備份。');}}
+function uid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function esc(x){return (x||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function badge(cls,txt){return '<span class="badge '+cls+'">'+txt+'</span>';}
+
+/* ---------- 課程庫載入 ---------- */
+function setCatStat(){
+  document.getElementById('catStat').textContent='課程庫 '+CATALOG.length+' 場';
+  const c=document.getElementById('catCount');if(c)c.textContent='('+CATALOG.length+' 場)';
+}
+function normCat(arr){
+  return (arr||[]).filter(s=>s&&s.title).map(s=>({code:(s.code||'').toUpperCase(),title:s.title,day:s.day||'',
+    start:s.start||'',end:s.end||'',location:s.location||'',type:s.type||'講座',speakers:s.speakers||'',
+    url:s.url||'',delivery:s.delivery||'inperson',enroll:!!s.enroll,replay:!!s.replay}));
+}
+function mergeCat(arr){
+  const key=s=>(s.code||s.title)+'|'+s.day+'|'+s.start;
+  const map={};CATALOG.forEach(s=>map[key(s)]=s);normCat(arr).forEach(s=>map[key(s)]=s);
+  CATALOG=Object.values(map);
+  try{localStorage.setItem(CATKEY,JSON.stringify(CATALOG));}catch(e){}
+  setCatStat();
+}
+(function initCatalog(){
+  try{const c=localStorage.getItem(CATKEY);if(c)CATALOG=JSON.parse(c);}catch(e){}
+  setCatStat();
+  fetch('catalog.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{
+    if(j&&j.sessions)mergeCat(j.sessions);
+  }).catch(()=>{ /* file:// 開啟時 fetch 不可用,改用「匯入課程庫 JSON」 */ });
+})();
+function importCatalog(ev){
+  const f=ev.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const j=JSON.parse(r.result);mergeCat(Array.isArray(j)?j:j.sessions);
+    alert('課程庫已更新,共 '+CATALOG.length+' 場。');renderCat();}catch(e){alert('格式錯誤。');}};
+  r.readAsText(f);ev.target.value='';
+}
+
+/* ---------- 課程庫 UI ---------- */
+function openCatalog(){renderCat();catDlg.showModal();}
+function renderCat(){
+  const kw=(document.getElementById('catQ').value||'').trim().toLowerCase();
+  const el=document.getElementById('catList');
+  let items=CATALOG;
+  if(kw)items=items.filter(s=>(s.code+' '+s.title+' '+s.speakers+' '+s.location+' '+s.type).toLowerCase().includes(kw));
+  items=items.slice(0,60);
+  el.innerHTML=items.map((s,i)=>{
+    const idx=CATALOG.indexOf(s);
+    const dayTxt=s.day?s.day.slice(5).replace('-','/')+(s.start?' '+s.start+'–'+s.end:''):'時間待確認';
+    return '<div class="cat-item"><div class="info">'
+      +(s.code?'<span class="c">'+esc(s.code)+'</span> ':'')
+      +(s.delivery==='digital'?badge('b-dig','數位'):'')
+      +(s.enroll?badge('b-wait','需報名'):'')
+      +'<div class="t">'+esc(s.title)+'</div>'
+      +'<div class="m">'+dayTxt+'　'+esc(s.location||'')+(s.speakers?'　'+esc(s.speakers):'')+'</div></div>'
+      +'<button class="btn small" onclick="addFromCat('+idx+')">＋加入</button></div>';
+  }).join('')||'<p class="hint">找不到。若課程庫還不完整,請先用抓取工具匯入完整清單。</p>';
+}
+function catToSession(s,priority){
+  return {id:uid(),code:s.code,title:s.title,day:s.day,start:s.start,end:s.end,location:s.location,
+    type:s.type,speakers:s.speakers,priority:priority||'alt',status:s.enroll?'未定':'未定',
+    replay:(s.replay||s.delivery==='digital')?'yes':'no',url:s.url,notes:''};
+}
+function addFromCat(i){
+  const s=CATALOG[i];if(!s)return;
+  if(data.some(d=>d.code&&s.code&&d.code===s.code&&d.day===s.day)){alert(s.code+' 已在課表中。');return;}
+  data.push(catToSession(s,'alt'));persist();render();
+  alert('已加入:'+(s.code||s.title));
+}
+function batchAdd(){
+  const txt=document.getElementById('codePaste').value;
+  const pr=document.getElementById('batchPriority').value;
+  const codes=[...new Set((txt.toUpperCase().match(/[A-Z]{2,5}\d{3,5}(?:-D)?/g)||[]))];
+  if(!codes.length){alert('沒有辨識到課程代碼。');return;}
+  const added=[],missed=[],dup=[];
+  codes.forEach(c=>{
+    if(data.some(d=>(d.code||'').toUpperCase()===c)){dup.push(c);return;}
+    const hit=CATALOG.filter(s=>s.code===c);
+    if(hit.length){hit.forEach(h=>data.push(catToSession(h,pr)));added.push(c);}
+    else{data.push({id:uid(),code:c,title:c+'(課程庫查無,請補時間)',type:'講座',day:'',start:'',end:'',
+      location:'',speakers:'',priority:pr,status:'未定',replay:'no',url:'',notes:'課程庫中找不到此代碼——請先用抓取工具更新課程庫,或手動填時間。'});
+      missed.push(c);}
+  });
+  persist();render();
+  alert('比對完成\n✅ 找到並加入:'+(added.join(', ')||'無')
+    +'\n⚠️ 庫中查無(已建占位):'+(missed.join(', ')||'無')
+    +'\n↩️ 已在課表跳過:'+(dup.join(', ')||'無'));
+  catDlg.close();
+}
+
+/* ---------- 我的課表 ---------- */
+function renderTabs(){
+  const el=document.getElementById('dayTabs');el.innerHTML='';
+  DAYS.forEach(d=>{
+    let n;
+    if(d.v==='all')n=data.length;
+    else if(d.v==='other')n=data.filter(s=>s.day&&!MAIN_DAYS.includes(s.day)).length;
+    else n=data.filter(s=>s.day===d.v).length;
+    const b=document.createElement('button');
+    b.innerHTML=d.label+'<span class="n">'+n+'</span>';
+    if(d.v===curDay)b.classList.add('on');
+    b.onclick=()=>{curDay=d.v;render();};
+    el.appendChild(b);
+  });
+}
+function inDay(s,v){
+  if(v==='all')return true;
+  if(v==='other')return s.day&&!MAIN_DAYS.includes(s.day);
+  return s.day===v;
+}
+function match(s){
+  if(!inDay(s,curDay))return false;
+  if(curFilters.has('star')&&s.priority!=='star')return false;
+  if(curFilters.has('lab')&&s.type!=='Hands-On Lab')return false;
+  if(curFilters.has('reg')&&s.status!=='已報名')return false;
+  if(curFilters.has('note')&&!(s.notes||'').trim())return false;
+  if(q){const t=(s.code+' '+s.title+' '+(s.speakers||'')+' '+(s.location||'')+' '+(s.notes||'')).toLowerCase();
+    if(!t.includes(q))return false;}
+  return true;
+}
+function overlap(a,b){return a.day&&a.day===b.day&&a.start&&a.end&&b.start&&b.end&&a.start<b.end&&b.start<a.end;}
+function conflictsOf(s){
+  return data.filter(o=>o.id!==s.id&&overlap(s,o)&&o.status!=='已完成'&&s.status!=='已完成'
+    &&(s.priority!=='none'||o.priority!=='none'||s.status==='已報名'||o.status==='已報名'));
+}
+function cardHTML(s){
+  const b=[];
+  if(s.priority==='star')b.push(badge('b-star','★必上'));
+  if(s.priority==='alt')b.push(badge('b-alt','○備選'));
+  if(s.type==='Hands-On Lab')b.push(badge('b-lab','Lab'));
+  if(s.status==='已報名')b.push(badge('b-reg','已報名'));
+  if(s.status==='候補中')b.push(badge('b-wait','候補中'));
+  if(s.status==='已完成')b.push(badge('b-done','✓已完成'));
+  if(s.replay==='yes')b.push(badge('b-replay','有Replay'));
+  const meta=[s.type,s.location,s.speakers].filter(Boolean).map(esc).join('　');
+  const conf=conflictsOf(s);
+  let h='<div class="slot">';
+  h+='<div class="time'+(s.start?'':' tbd')+'">'+(s.start?esc(s.start)+'<span class="end">'+esc(s.end||'')+'</span>':'時間<br>待確認')+'</div>';
+  h+='<div class="card p-'+s.priority+(s.status==='已完成'?' done':'')+'" onclick="openEditor(\''+s.id+'\')">';
+  h+='<div class="row1">'+(s.code?'<span class="code">'+esc(s.code)+'</span>':'')+b.join(' ')+'</div>';
+  h+='<h3>'+esc(s.title)+'</h3>';
+  if(meta)h+='<div class="meta">'+meta+'</div>';
+  if((s.notes||'').trim())h+='<div class="note-preview">📝 '+esc(s.notes)+'</div>';
+  h+='</div></div>';
+  if(conf.length)h+='<div class="conflict">⚠ 時間衝突:'+conf.map(c=>esc(c.code||c.title)).join('、')
+    +'。原則:實體限定優先於有 Replay 的場次。</div>';
+  return h;
+}
+function render(){
+  renderTabs();
+  const list=document.getElementById('list');
+  const shown=data.filter(match);
+  if(!shown.length){list.innerHTML='<div class="empty">沒有符合的課程。<br>從「📚 課程庫」加入,或「＋新增」。</div>';return;}
+  const groups=curDay==='all'?DAYS.slice(1):DAYS.filter(d=>d.v===curDay);
+  let h='';
+  groups.forEach(d=>{
+    const items=shown.filter(s=>inDay(s,d.v)).sort((a,b)=>((a.day||'9999')+(a.start||'99'))<((b.day||'9999')+(b.start||'99'))?-1:1);
+    if(!items.length)return;
+    h+='<div class="daytitle"><b>'+d.label+'</b>'+(d.theme?'<span>'+d.theme+'</span>':'')
+      +(d.v===''?'<span>用課程庫比對即可自動帶入時間</span>':'')+'</div>';
+    items.forEach(s=>h+=cardHTML(s));
+  });
+  list.innerHTML=h||'<div class="empty">沒有符合的課程。</div>';
+}
+
+/* ---------- 編輯 ---------- */
+function openEditor(id){
+  const f=document.getElementById('form');f.reset();
+  const s=id?data.find(x=>x.id===id):null;
+  document.getElementById('dlgTitle').textContent=s?'編輯課程':'新增課程';
+  document.getElementById('delBtn').style.visibility=s?'visible':'hidden';
+  if(s)for(const k of ['code','title','type','day','start','end','location','speakers','priority','status','replay','url','notes','id'])
+    if(f[k]!==undefined)f[k].value=s[k]||'';
+  if(!s)f.id.value='';
+  dlg.showModal();
+}
+function saveSession(e){
+  const f=document.getElementById('form');const obj={};
+  ['code','title','type','day','start','end','location','speakers','priority','status','replay','url','notes']
+    .forEach(k=>obj[k]=(f[k].value||'').trim?f[k].value.trim():f[k].value);
+  const id=f.id.value;
+  if(id){const i=data.findIndex(x=>x.id===id);data[i]={...data[i],...obj};}
+  else{obj.id=uid();data.push(obj);}
+  persist();render();
+}
+function deleteSession(){
+  const id=document.getElementById('form').id.value;
+  if(id&&confirm('確定刪除這筆課程?')){data=data.filter(x=>x.id!==id);persist();dlg.close();render();}
+}
+
+/* ---------- 匯出 / 匯入 ---------- */
+function dl(name,content,type){
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));
+  a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+function exportJSON(){
+  dl('AU2026我的課表_'+new Date().toISOString().slice(0,10)+'.json',
+    JSON.stringify({exported:new Date().toISOString(),sessions:data},null,2),'application/json');
+}
+function importJSON(ev){
+  const file=ev.target.files[0];if(!file)return;const r=new FileReader();
+  r.onload=()=>{try{
+    const j=JSON.parse(r.result);const arr=Array.isArray(j)?j:j.sessions;
+    if(!Array.isArray(arr))throw 0;
+    if(confirm('匯入 '+arr.length+' 筆。「確定」=覆蓋,「取消」=合併。'))data=arr;
+    else{const ids=new Set(data.map(s=>s.id));arr.forEach(s=>{if(!ids.has(s.id))data.push(s);});}
+    persist();render();alert('匯入完成。');
+  }catch(e){alert('檔案格式錯誤。');}};
+  r.readAsText(file);ev.target.value='';
+}
+function exportCSV(){
+  const head=['日期','開始','結束','代碼','名稱','類型','優先級','狀態','地點','講者','Replay','連結','筆記'];
+  const pr={star:'★必上',alt:'○備選',none:'一般'};
+  const rows=data.slice().sort((a,b)=>((a.day||'9999')+(a.start||''))<((b.day||'9999')+(b.start||''))?-1:1).map(s=>
+    [s.day,s.start,s.end,s.code,s.title,s.type,pr[s.priority]||'',s.status,s.location,s.speakers,
+     s.replay==='yes'?'有':'',s.url,(s.notes||'').replace(/\n/g,' ')]
+    .map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(','));
+  dl('AU2026我的課表.csv','\uFEFF'+head.join(',')+'\n'+rows.join('\n'),'text/csv;charset=utf-8');
+}
+
+/* ---------- 事件 ---------- */
+document.getElementById('q').addEventListener('input',e=>{q=e.target.value.trim().toLowerCase();render();});
+document.querySelectorAll('.toolbar .chip').forEach(c=>c.onclick=()=>{
+  const k=c.dataset.filter;curFilters.has(k)?curFilters.delete(k):curFilters.add(k);
+  c.classList.toggle('on');render();});
+persist();render();
+</script>
+</body>
+</html>
