@@ -257,8 +257,12 @@ function mergeCat(arr){
   try{const c=localStorage.getItem(CATKEY);if(c)CATALOG=JSON.parse(c);}catch(e){}
   setCatStat();
   fetch('catalog.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{
-    if(j&&j.sessions)mergeCat(j.sessions);
-  }).catch(()=>{ /* file:// 開啟時 fetch 不可用,改用「匯入課程庫 JSON」 */ });
+    if(j&&j.sessions){
+      CATALOG=normCat(j.sessions);
+      try{localStorage.setItem(CATKEY,JSON.stringify(CATALOG));}catch(e){}
+      setCatStat();
+    }
+  }).catch(()=>{ /* 無網路時沿用上次成功下載的課程庫 */ });
 })();
 function importCatalog(ev){
   const f=ev.target.files[0];if(!f)return;const r=new FileReader();
