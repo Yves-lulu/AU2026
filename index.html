@@ -85,6 +85,7 @@
   .cat-item .info{flex:1;min-width:0}
   .cat-item .c{font-size:12px;font-weight:700;color:var(--cobalt)}
   .cat-item .t{font-size:13.5px;font-weight:600}
+  .title-en{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.35}
   .cat-item .m{font-size:12px;color:var(--muted);margin-top:2px}
   #catList{display:grid;gap:8px;max-height:38vh;overflow-y:auto}
   .hint{font-size:12px;color:var(--muted)}
@@ -120,9 +121,11 @@
   <p>課表與筆記自動存在此瀏覽器。放上 GitHub Pages 後,任何裝置開啟網址即可用;換裝置請先匯出 JSON 再匯入。</p>
   <div class="btns">
     <button class="btn small" onclick="exportJSON()">匯出我的課表 JSON</button>
+    <button class="btn small" onclick="document.getElementById('scheduleCsv').click()">匯入 AU My Schedule CSV</button>
     <button class="btn small" onclick="document.getElementById('importFile').click()">匯入課表 JSON</button>
     <button class="btn small" onclick="exportCSV()">匯出 CSV(Excel)</button>
     <button class="btn small" onclick="window.print()">列印 / 存 PDF</button>
+    <input type="file" id="scheduleCsv" accept=".csv,text/csv" style="display:none" onchange="importScheduleCSV(event)">
     <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
   </div>
 </div>
@@ -200,7 +203,7 @@
       <button class="btn small" onclick="document.getElementById('catFile').click()">匯入課程庫 JSON(抓取工具產出)</button>
       <input type="file" id="catFile" accept=".json" style="display:none" onchange="importCatalog(event)">
     </div>
-    <p class="hint">課程庫 = AU 官方目錄快照(實體 592 + 數位 173 場)。用 catalog-scraper.js 在 AU 目錄頁抓完整清單後匯入,或放在 GitHub 同目錄的 catalog.json 會自動載入。</p>
+    <p class="hint">課程庫已包含 AU 官方現場 592 堂與數位 173 堂，共 765 堂；中文名稱優先顯示，並保留英文原名供現場核對。</p>
   </div>
 </dialog>
 
@@ -242,7 +245,7 @@ function setCatStat(){
   const c=document.getElementById('catCount');if(c)c.textContent='('+CATALOG.length+' 場)';
 }
 function normCat(arr){
-  return (arr||[]).filter(s=>s&&s.title).map(s=>({code:(s.code||'').toUpperCase(),title:s.title,day:s.day||'',
+  return (arr||[]).filter(s=>s&&s.title).map(s=>({code:(s.code||'').toUpperCase(),title:s.title,titleEn:s.titleEn||'',day:s.day||'',
     start:s.start||'',end:s.end||'',location:s.location||'',type:s.type||'講座',speakers:s.speakers||'',
     url:s.url||'',delivery:s.delivery||'inperson',enroll:!!s.enroll,replay:!!s.replay}));
 }
@@ -277,7 +280,7 @@ function renderCat(){
   const kw=(document.getElementById('catQ').value||'').trim().toLowerCase();
   const el=document.getElementById('catList');
   let items=CATALOG;
-  if(kw)items=items.filter(s=>(s.code+' '+s.title+' '+s.speakers+' '+s.location+' '+s.type).toLowerCase().includes(kw));
+  if(kw)items=items.filter(s=>(s.code+' '+s.title+' '+(s.titleEn||'')+' '+s.speakers+' '+s.location+' '+s.type).toLowerCase().includes(kw));
   items=items.slice(0,60);
   el.innerHTML=items.map((s,i)=>{
     const idx=CATALOG.indexOf(s);
@@ -287,12 +290,13 @@ function renderCat(){
       +(s.delivery==='digital'?badge('b-dig','數位'):'')
       +(s.enroll?badge('b-wait','需報名'):'')
       +'<div class="t">'+esc(s.title)+'</div>'
+      +(s.titleEn?'<div class="title-en">'+esc(s.titleEn)+'</div>':'')
       +'<div class="m">'+dayTxt+'　'+esc(s.location||'')+(s.speakers?'　'+esc(s.speakers):'')+'</div></div>'
       +'<button class="btn small" onclick="addFromCat('+idx+')">＋加入</button></div>';
   }).join('')||'<p class="hint">找不到。若課程庫還不完整,請先用抓取工具匯入完整清單。</p>';
 }
 function catToSession(s,priority){
-  return {id:uid(),code:s.code,title:s.title,day:s.day,start:s.start,end:s.end,location:s.location,
+  return {id:uid(),code:s.code,title:s.title,titleEn:s.titleEn||'',day:s.day,start:s.start,end:s.end,location:s.location,
     type:s.type,speakers:s.speakers,priority:priority||'alt',status:s.enroll?'未定':'未定',
     replay:(s.replay||s.delivery==='digital')?'yes':'no',url:s.url,notes:''};
 }
@@ -374,6 +378,7 @@ function cardHTML(s){
   h+='<div class="card p-'+s.priority+(s.status==='已完成'?' done':'')+'" onclick="openEditor(\''+s.id+'\')">';
   h+='<div class="row1">'+(s.code?'<span class="code">'+esc(s.code)+'</span>':'')+b.join(' ')+'</div>';
   h+='<h3>'+esc(s.title)+'</h3>';
+  if(s.titleEn)h+='<div class="title-en">'+esc(s.titleEn)+'</div>';
   if(meta)h+='<div class="meta">'+meta+'</div>';
   if((s.notes||'').trim())h+='<div class="note-preview">📝 '+esc(s.notes)+'</div>';
   h+='</div></div>';
@@ -432,6 +437,47 @@ function exportJSON(){
   dl('AU2026我的課表_'+new Date().toISOString().slice(0,10)+'.json',
     JSON.stringify({exported:new Date().toISOString(),sessions:data},null,2),'application/json');
 }
+
+function parseCSV(text){
+  const rows=[];let row=[],cell='',quoted=false;
+  for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];
+    if(c==='"'&&quoted&&n==='"'){cell+='"';i++;}
+    else if(c==='"')quoted=!quoted;
+    else if(c===','&&!quoted){row.push(cell);cell='';}
+    else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&n==='\n')i++;row.push(cell);if(row.some(x=>x!==''))rows.push(row);row=[];cell='';}
+    else cell+=c;
+  }
+  row.push(cell);if(row.some(x=>x!==''))rows.push(row);
+  const head=rows.shift().map(x=>x.trim());
+  return rows.map(r=>Object.fromEntries(head.map((h,i)=>[h,(r[i]||'').trim()])));
+}
+function importScheduleCSV(ev){
+  const file=ev.target.files[0];if(!file)return;const reader=new FileReader();
+  reader.onload=()=>{try{
+    const rows=parseCSV(reader.result.replace(/^\uFEFF/,''));
+    if(!rows.length||!rows[0]['Session Code'])throw new Error('找不到 Session Code 欄位');
+    const imported=rows.map((r,i)=>{
+      const code=(r['Session Code']||'').toUpperCase();
+      const p=(r.Date||'').split('/');const day=p.length===3?p[0]+'-'+p[1].padStart(2,'0')+'-'+p[2].padStart(2,'0'):'';
+      const start=r['Start Time']||'';
+      const hit=CATALOG.find(s=>s.code===code&&s.day===day&&s.start===start)
+        ||CATALOG.find(s=>s.code===code&&s.day===day)||CATALOG.find(s=>s.code===code);
+      const raw=(r['Session Title']||code).replace(/^\(Favorited\)\s*/,'');
+      const manual={4523:'Forma Futures 啟動工作坊',4317:'亞太區歡迎交流餐會'};
+      return {id:'csv'+Date.now().toString(36)+i,code,title:hit?hit.title:(manual[code]||raw),titleEn:hit?(hit.titleEn||raw):raw,
+        day,start,end:r['End Time']||'',location:r.Room||(hit?hit.location:''),type:hit?hit.type:'課程',
+        speakers:hit?hit.speakers:'',priority:r.Status==='Scheduled'?'star':'alt',
+        status:r.Status==='Scheduled'?'已報名':'未定',replay:hit&&hit.replay?'yes':'no',
+        url:hit?hit.url:'',notes:'AU My Schedule：'+(r.Status||'')};
+    });
+    if(confirm('已讀取 '+imported.length+' 筆。按「確定」覆蓋目前課表；按「取消」則合併。'))data=imported;
+    else{const keys=new Set(data.map(s=>s.code+'|'+s.day+'|'+s.start));imported.forEach(s=>{const k=s.code+'|'+s.day+'|'+s.start;if(!keys.has(k)){data.push(s);keys.add(k);}});}
+    persist();render();alert('My Schedule 匯入完成，共 '+imported.length+' 筆。');
+  }catch(e){alert('CSV 匯入失敗：'+e.message);}
+  ev.target.value='';
+  };reader.readAsText(file);
+}
+
 function importJSON(ev){
   const file=ev.target.files[0];if(!file)return;const r=new FileReader();
   r.onload=()=>{try{
